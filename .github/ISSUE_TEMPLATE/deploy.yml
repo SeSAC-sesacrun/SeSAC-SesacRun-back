@@ -1,0 +1,23 @@
+name: "🚀 Deploy"
+description: "배포 이슈"
+labels: ["deploy"]
+body:
+  - type: textarea
+    attributes:
+      label: 📦 배포 내용
+      description: 어떤 변경사항이 배포에 포함되는지 적어주세요.
+      placeholder: 버그 수정 / 기능 추가 / 환경변수 변경 등
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: ⚙️ 배포 체크리스트
+      placeholder: "- [ ] 환경변수 확인\n- [ ] 빌드 성공 여부 확인"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 🙋 참고 사항
+      description: 추가적으로 공유할 내용이 있다면 작성해주세요.
