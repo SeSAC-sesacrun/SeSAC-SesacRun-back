@@ -29,9 +29,8 @@ public class RecruitmentPostCreateReqDto {
     private final Integer totalMembers;
 
 
-    public RecruitmentPost toEntity(RecruitmentPostCreateReqDto reqDto, User author) {
-        return RecruitmentPost.of(reqDto.getCategory(), reqDto.getTitle(), reqDto.content,
-            reqDto.totalMembers, author);
+    public RecruitmentPost toEntity(User author) {
+        return RecruitmentPost.of(category, title, content, totalMembers, author);
     }
 
 }

@@ -32,7 +32,7 @@ public class RecruitmentPostService {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
 
-        RecruitmentPost post = recruitmentPostRepository.save(reqDto.toEntity(reqDto, user));
+        RecruitmentPost post = recruitmentPostRepository.save(reqDto.toEntity(user));
         return post.getId();
     }
 
