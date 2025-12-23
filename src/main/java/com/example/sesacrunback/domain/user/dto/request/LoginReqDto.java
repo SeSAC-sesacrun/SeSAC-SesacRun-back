@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @Getter
-public class UserCreateReqDto {
+@NoArgsConstructor
+public class LoginReqDto {
 
     @NotBlank
     @Email
@@ -15,8 +15,4 @@ public class UserCreateReqDto {
 
     @NotBlank
     private String password;
-
-    @NotBlank
-    private String name;
-
 }
