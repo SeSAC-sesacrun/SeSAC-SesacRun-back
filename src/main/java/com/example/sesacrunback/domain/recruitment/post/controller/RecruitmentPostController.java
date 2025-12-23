@@ -14,6 +14,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,6 +59,12 @@ public class RecruitmentPostController {
         return ResponseEntity.ok(
             ApiResponse.success(recruitmentPostService.updatePost(postId, request, 2L)));
 
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<ApiResponse<String>> deletePost(@PathVariable Long postId) {
+        recruitmentPostService.deletePost(postId, 2L);
+        return ResponseEntity.ok(ApiResponse.success("삭제되었습니다."));
     }
 
 }

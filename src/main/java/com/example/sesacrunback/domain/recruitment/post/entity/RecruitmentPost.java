@@ -17,7 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -60,8 +59,6 @@ public class RecruitmentPost extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Integer views; // 조회수
-
-    private LocalDateTime deletedAt; // 삭제일시 (Soft Delete)
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)

@@ -64,6 +64,14 @@ public class RecruitmentPostService {
         return post.getId();
     }
 
+    @Transactional
+    public void deletePost(Long postId, Long userId) {
+        RecruitmentPost post = getPostById(postId);
+
+        validatePostOwner(post, userId);
+        recruitmentPostRepository.delete(post);
+    }
+
     private void validatePostOwner(RecruitmentPost post, Long userId) {
         if (!post.isPostOwner(userId)) {
             throw new CustomException(ErrorCode.POST_NOT_OWNER);
