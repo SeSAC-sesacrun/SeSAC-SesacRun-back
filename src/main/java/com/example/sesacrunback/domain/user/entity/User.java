@@ -6,6 +6,7 @@ import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.recruitment.member.entity.RecruitmentMember;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
+import com.example.sesacrunback.domain.user.dto.request.UserCreateReqDto;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -46,8 +49,7 @@ public class User extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role; // 역할 (일반 사용자, 강의자)
-
+    private UserRole role = UserRole.USER; // 역할 (일반 사용자, 강의자)
 
     private LocalDateTime deletedAt; // 삭제일시 (Soft Delete)
 
@@ -69,5 +71,19 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<CartItem> cartItems = new ArrayList<>(); // 이 사용자의 장바구니 항목 목록
 
+    @Builder
+    public User(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
+
+    public static User from(UserCreateReqDto createReqDto){
+        return User.builder()
+                   .email(createReqDto.getEmail())
+                   .password(  createReqDto.getPassword())
+                   .name(createReqDto.getName())
+                   .build();
+    }
 
 }
