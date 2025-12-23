@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +28,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "recruitment_posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RecruitmentPost extends BaseTimeEntity {
 
     @Id
@@ -40,7 +44,7 @@ public class RecruitmentPost extends BaseTimeEntity {
     @Column(nullable = false)
     private RecruitmentStatus status; // 모집 상태 (모집중, 모집완료)
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String title; // 제목
 
     @Column(nullable = false)
@@ -58,10 +62,25 @@ public class RecruitmentPost extends BaseTimeEntity {
     private LocalDateTime deletedAt; // 삭제일시 (Soft Delete)
 
     @ManyToOne
-    @JoinColumn(name = "author_id",nullable = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private User author; // 작성자
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecruitmentMember> recruitmentMembers = new ArrayList<>(); // 이 모집글에 참여한 멤버 목록
+
+
+    public static RecruitmentPost of(RecruitmentCategory category, String title, String content,
+        Integer totalMembers, User author) {
+        return RecruitmentPost.builder()
+            .category(category)
+            .status(RecruitmentStatus.RECRUITING) // 모집중이 기본
+            .title(title)
+            .content(content)
+            .currentMembers(1) // 작성자 1명 기본
+            .totalMembers(totalMembers)
+            .views(0) // 조회수 기본 0
+            .author(author)
+            .build();
+    }
 
 }
