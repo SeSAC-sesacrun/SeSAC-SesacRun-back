@@ -30,8 +30,9 @@ public class RecruitmentPostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<ApiResponse<PostDetailResDto>> findById(@PathVariable Long postId) {
+    public ResponseEntity<ApiResponse<PostDetailResDto>> viewPost(@PathVariable Long postId) {
         return ResponseEntity.ok(ApiResponse.success(recruitmentPostService.viewPost(postId)));
     }
+
 
 }
