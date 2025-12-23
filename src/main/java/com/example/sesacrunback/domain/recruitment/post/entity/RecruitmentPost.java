@@ -3,6 +3,8 @@ package com.example.sesacrunback.domain.recruitment.post.entity;
 import com.example.sesacrunback.domain.recruitment.member.entity.RecruitmentMember;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
+import com.example.sesacrunback.global.exception.CustomException;
+import com.example.sesacrunback.global.exception.ErrorCode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -85,5 +87,28 @@ public class RecruitmentPost extends BaseTimeEntity {
 
     public void increaseViewCount() {
         this.views++;
+    }
+
+    public void updatePost(RecruitmentCategory category, RecruitmentStatus status, String title,
+        String content, Integer totalMembers) {
+
+        validateTotalMembers(totalMembers);
+
+        this.category = category;
+        this.status = status;
+        this.title = title;
+        this.content = content;
+        this.totalMembers = totalMembers;
+    }
+
+    public boolean isPostOwner(Long userId) {
+        return this.author.getId().equals(userId);
+    }
+
+    private void validateTotalMembers(Integer newTotalMembers) {
+        // 현재 참여 인원보다 적으면 불가
+        if (newTotalMembers < this.currentMembers) {
+            throw new CustomException(ErrorCode.POST_INVALID_TOTAL_MEMBERS);
+        }
     }
 }

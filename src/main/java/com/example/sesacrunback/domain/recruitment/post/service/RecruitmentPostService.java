@@ -1,6 +1,7 @@
 package com.example.sesacrunback.domain.recruitment.post.service;
 
 import com.example.sesacrunback.domain.recruitment.post.dto.request.RecruitmentPostCreateReqDto;
+import com.example.sesacrunback.domain.recruitment.post.dto.request.RecruitmentPostUpdateReqDto;
 import com.example.sesacrunback.domain.recruitment.post.dto.response.PostDetailResDto;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentCategory;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
@@ -37,9 +38,7 @@ public class RecruitmentPostService {
 
     @Transactional
     public PostDetailResDto viewPost(Long postId) {
-        RecruitmentPost post = recruitmentPostRepository.findById(postId)
-            .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
-
+        RecruitmentPost post = getPostById(postId);
         // 조회 수 증가
         post.increaseViewCount();
 
@@ -51,5 +50,28 @@ public class RecruitmentPostService {
         Slice<RecruitmentPost> posts = recruitmentPostRepository.findPosts(category, status,
             pageable);
         return posts.map(PostDetailResDto::from);
+    }
+
+    @Transactional
+    public Long updatePost(Long postId, RecruitmentPostUpdateReqDto reqDto, Long userId) {
+        RecruitmentPost post = getPostById(postId);
+
+        validatePostOwner(post, userId);
+
+        post.updatePost(reqDto.getCategory(), reqDto.getStatus(), reqDto.getTitle(),
+            reqDto.getContent(), reqDto.getTotalMembers());
+
+        return post.getId();
+    }
+
+    private void validatePostOwner(RecruitmentPost post, Long userId) {
+        if (!post.isPostOwner(userId)) {
+            throw new CustomException(ErrorCode.POST_NOT_OWNER);
+        }
+    }
+
+    private RecruitmentPost getPostById(Long postId) {
+        return recruitmentPostRepository.findById(postId)
+            .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
     }
 }
