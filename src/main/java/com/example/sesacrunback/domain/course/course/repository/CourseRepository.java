@@ -49,7 +49,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     /**
      * 강사별 강의 목록
      */
-    List<Course> findByInstructorId(Long instructorId);
+    List<Course> findByInstructor_Id(Long instructorId);
 
     /* ===============================
      * 검색

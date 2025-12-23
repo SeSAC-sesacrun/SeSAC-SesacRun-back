@@ -5,9 +5,18 @@ INSERT INTO users (email, password, name, role, created_at, updated_at) VALUES
 ('user2@test.com', 'password123', '박학생', 'USER', NOW(), NOW());
 
 -- Courses
-INSERT INTO courses (title, description, detailed_description, thumbnail, category, price, original_price, discount, rating, review_count, student_count, features, status, instructor_id, created_at, updated_at) VALUES
-('자바 완전 정복', '자바 기초부터 심화까지', '자바의 모든 것을 다룹니다. 변수, 연산자, 제어문부터 객체지향 프로그래밍까지 체계적으로 학습합니다.', 'https://example.com/java.png', 'Development', 50000, 70000, 20000, 4.5, 120, 0, '["평생 수강", "수료증 제공", "Q&A 답변"]', 'PUBLISHED', 1, NOW(), NOW()),
-('스프링 부트 입문', '웹 개발의 시작 스프링 부트', '스프링 부트로 웹 서버를 만들어봅니다. REST API 설계와 데이터베이스 연동을 배웁니다.', 'https://example.com/spring.png', 'Web', 60000, 80000, 20000, 4.7, 85, 0, '["평생 수강", "실습 프로젝트", "취업 지원"]', 'PUBLISHED', 1, NOW(), NOW());
+INSERT INTO courses (title, description, detailed_description, thumbnail, category, price, rating, review_count, student_count, status, instructor_id, created_at, updated_at) VALUES
+('자바 완전 정복', '자바 기초부터 심화까지', '자바의 모든 것을 다룹니다. 변수, 연산자, 제어문부터 객체지향 프로그래밍까지 체계적으로 학습합니다.', 'https://example.com/java.png', 'Development', 50000, 4.5, 120, 0, 'PUBLISHED', 1, NOW(), NOW()),
+('스프링 부트 입문', '웹 개발의 시작 스프링 부트', '스프링 부트로 웹 서버를 만들어봅니다. REST API 설계와 데이터베이스 연동을 배웁니다.', 'https://example.com/spring.png', 'Web', 60000, 4.7, 85, 0, 'PUBLISHED', 1, NOW(), NOW());
+
+-- Course Features
+INSERT INTO course_features (course_id, feature) VALUES
+(1, '평생 수강'),
+(1, '수료증 제공'),
+(1, 'Q&A 답변'),
+(2, '평생 수강'),
+(2, '실습 프로젝트'),
+(2, '취업 지원');
 
 -- Sections
 INSERT INTO sections (title, section_order, course_id, created_at, updated_at) VALUES

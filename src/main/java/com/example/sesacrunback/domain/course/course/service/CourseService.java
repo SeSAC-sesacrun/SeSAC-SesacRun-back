@@ -4,12 +4,12 @@ import com.example.sesacrunback.domain.course.course.dto.request.CreateCourseReq
 import com.example.sesacrunback.domain.course.course.dto.response.CourseDetailResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
 import com.example.sesacrunback.domain.course.course.entity.Course;
-import com.example.sesacrunback.domain.course.course.entity.enums.CourseStatus;
 import com.example.sesacrunback.domain.course.course.repository.CourseRepository;
 import com.example.sesacrunback.domain.course.lecture.entity.Lecture;
-import com.example.sesacrunback.domain.course.section.entity.Section;
+import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final EntityManager entityManager;
 
     /**
      * 현재 로그인한 사용자 ID 반환 (더미)
@@ -38,74 +39,42 @@ public class CourseService {
     }
 
     /**
-     * 강의 생성 (강사만 가능)
+     * 강의 생성 (Phase 1: 생성 즉시 게시)
      */
     @Transactional
     public CourseResponse createCourse(CreateCourseRequest request) {
         log.info("Creating new course: {}", request.getTitle());
 
-        // 1. 현재 로그인한 사용자 ID (더미)
         Long instructorId = getCurrentUserId();
 
-        // 2. Course 생성
-        Course course = Course.builder()
-                .instructorId(instructorId)
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .detailedDescription(request.getDetailedDescription())
-                .thumbnail(request.getThumbnail())
-                .category(request.getCategory())
-                .price(request.getPrice())
-                .originalPrice(request.getOriginalPrice())
-                .discount(request.getDiscount())
-                .features(request.getFeatures())
-                .status(CourseStatus.PUBLISHED)
-                .build();
+        // User 프록시 생성 (실제 DB 조회 없이 참조만 생성)
+        User instructor = entityManager.getReference(User.class, instructorId);
 
-        // 3. Section / Lecture 생성
-        if (request.getSections() != null) {
-            for (CreateCourseRequest.CreateSectionRequest sectionReq : request.getSections()) {
+        // ✅ Course 생성 책임을 DTO로 위임
+        Course course = request.toEntity(instructor);
 
-                Section section = Section.builder()
-                        .course(course)
-                        .title(sectionReq.getTitle())
-                        .order(sectionReq.getOrder())
-                        .build();
+        // ✅ Section / Lecture Stream 처리 (null 보정은 DTO에서 끝)
+        request.getSections().forEach(sectionReq -> {
 
-                if (sectionReq.getLectures() != null) {
-                    for (CreateCourseRequest.CreateLectureRequest lectureReq : sectionReq.getLectures()) {
+            var section = course.addSectionForCreate(
+                sectionReq.getTitle(),
+                sectionReq.getOrderOrDefault()
+            );
 
-                        Lecture lecture = Lecture.builder()
-                                .section(section)
-                                .title(lectureReq.getTitle())
-                                .videoUrl(lectureReq.getVideoUrl())
-                                .duration(
-                                    lectureReq.getDuration() != null
-                                        ? lectureReq.getDuration()
-                                        : 0
-                                )
-                                .order(lectureReq.getOrder())
-                                .isFree(
-                                    lectureReq.getIsFree() != null
-                                        ? lectureReq.getIsFree()
-                                        : false
-                                )
-                                .build();
+            sectionReq.getLecturesOrEmpty().stream()
+                .map(lectureReq -> Lecture.builder()
+                    .section(section)
+                    .title(lectureReq.getTitle())
+                    .videoUrl(lectureReq.getVideoUrl())
+                    .duration(lectureReq.getDurationOrDefault())
+                    .order(lectureReq.getOrder())
+                    .isFree(lectureReq.isFreeOrDefault())
+                    .build()
+                )
+                .forEach(section::addLecture);
+        });
 
-                        section.addLecture(lecture);
-                    }
-                }
-
-                course.addSection(section);
-            }
-        }
-
-        // 4. 저장 (cascade)
-        Course savedCourse = courseRepository.save(course);
-
-        log.info("Course created successfully with ID: {}", savedCourse.getId());
-
-        return CourseResponse.from(savedCourse);
+        return CourseResponse.from(courseRepository.save(course));
     }
 
     public CourseDetailResponse getCourseDetail(Long courseId) {
@@ -172,7 +141,7 @@ public class CourseService {
         Long instructorId = getCurrentUserId();
         log.info("Getting courses for instructor ID: {}", instructorId);
 
-        return courseRepository.findByInstructorId(instructorId)
+        return courseRepository.findByInstructor_Id(instructorId)
                 .stream()
                 .map(CourseResponse::from)
                 .collect(Collectors.toList());

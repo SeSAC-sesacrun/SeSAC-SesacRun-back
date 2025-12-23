@@ -58,5 +58,5 @@ public class Section extends BaseTimeEntity {
 
     public void setCourse(Course course) {
         this.course = course;
-    }
+    } //이거의 이름을 바꾸고 의미있는 함수명으로 바꿔야함.
 }

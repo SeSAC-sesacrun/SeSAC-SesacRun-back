@@ -104,8 +104,6 @@ GET {{base_url}}/api/v1/courses?page=0&size=12&sort=createdAt,DESC
         "thumbnail": "https://example.com/java.png",
         "category": "Development",
         "price": 50000,
-        "originalPrice": 70000,
-        "discount": 20000,
         "rating": 4.5,
         "reviewCount": 120,
         "studentCount": 0,
@@ -121,8 +119,6 @@ GET {{base_url}}/api/v1/courses?page=0&size=12&sort=createdAt,DESC
         "thumbnail": "https://example.com/spring.png",
         "category": "Web",
         "price": 60000,
-        "originalPrice": 80000,
-        "discount": 20000,
         "rating": 4.7,
         "reviewCount": 85,
         "studentCount": 0,
@@ -214,8 +210,6 @@ GET {{base_url}}/api/v1/courses/1
     "thumbnail": "https://example.com/java.png",
     "category": "Development",
     "price": 50000,
-    "originalPrice": 70000,
-    "discount": 20000,
     "rating": 4.5,
     "reviewCount": 120,
     "studentCount": 0,
@@ -353,8 +347,6 @@ GET {{base_url}}/api/v1/courses/category/Development?page=0&size=12
         "thumbnail": "https://example.com/java.png",
         "category": "Development",
         "price": 50000,
-        "originalPrice": 70000,
-        "discount": 20000,
         "rating": 4.5,
         "reviewCount": 120,
         "studentCount": 0,
@@ -419,8 +411,6 @@ GET {{base_url}}/api/v1/courses/search?keyword=자바&page=0&size=12
         "thumbnail": "https://example.com/java.png",
         "category": "Development",
         "price": 50000,
-        "originalPrice": 70000,
-        "discount": 20000,
         "rating": 4.5,
         "reviewCount": 120,
         "studentCount": 0,
@@ -484,8 +474,6 @@ GET {{base_url}}/api/v1/courses/popular?page=0&size=12
         "thumbnail": "https://example.com/spring.png",
         "category": "Web",
         "price": 60000,
-        "originalPrice": 80000,
-        "discount": 20000,
         "rating": 4.7,
         "reviewCount": 85,
         "studentCount": 0,
@@ -501,8 +489,6 @@ GET {{base_url}}/api/v1/courses/popular?page=0&size=12
         "thumbnail": "https://example.com/java.png",
         "category": "Development",
         "price": 50000,
-        "originalPrice": 70000,
-        "discount": 20000,
         "rating": 4.5,
         "reviewCount": 120,
         "studentCount": 0,
@@ -543,8 +529,6 @@ Content-Type: application/json
   "thumbnail": "https://example.com/react.png",
   "category": "Web",
   "price": 55000,
-  "originalPrice": 75000,
-  "discount": 20000,
   "features": [
     "평생 수강",
     "수료증 제공",
@@ -611,8 +595,6 @@ Content-Type: application/json
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| originalPrice | Integer | No | null | 원가 |
-| discount | Integer | No | null | 할인액 |
 | features | Array | No | [] | 기능 목록 |
 | sections | Array | No | [] | 섹션 목록 |
 
@@ -647,8 +629,6 @@ Content-Type: application/json
     "thumbnail": "https://example.com/react.png",
     "category": "Web",
     "price": 55000,
-    "originalPrice": 75000,
-    "discount": 20000,
     "rating": 0.0,
     "reviewCount": 0,
     "studentCount": 0,
@@ -733,8 +713,6 @@ GET {{base_url}}/api/v1/courses/my
       "thumbnail": "https://example.com/java.png",
       "category": "Development",
       "price": 50000,
-      "originalPrice": 70000,
-      "discount": 20000,
       "rating": 4.5,
       "reviewCount": 120,
       "studentCount": 0,
@@ -750,8 +728,6 @@ GET {{base_url}}/api/v1/courses/my
       "thumbnail": "https://example.com/spring.png",
       "category": "Web",
       "price": 60000,
-      "originalPrice": 80000,
-      "discount": 20000,
       "rating": 4.7,
       "reviewCount": 85,
       "studentCount": 0,
@@ -999,8 +975,6 @@ POST /api/v1/courses
   "thumbnail": "https://example.com/fullstack.png",
   "category": "Web",
   "price": 150000,
-  "originalPrice": 200000,
-  "discount": 50000,
   "features": [
     "평생 수강",
     "수료증 제공",
@@ -1269,7 +1243,7 @@ POST /api/v1/courses
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Python 기초 완성\",\n  \"description\": \"파이썬 기초부터 실전까지\",\n  \"detailedDescription\": \"Python의 기본 문법부터 실전 프로젝트까지 모두 다룹니다.\",\n  \"thumbnail\": \"https://example.com/python.png\",\n  \"category\": \"Development\",\n  \"price\": 45000,\n  \"originalPrice\": 60000,\n  \"discount\": 15000,\n  \"features\": [\n    \"평생 수강\",\n    \"수료증 제공\"\n  ]\n}"
+              "raw": "{\n  \"title\": \"Python 기초 완성\",\n  \"description\": \"파이썬 기초부터 실전까지\",\n  \"detailedDescription\": \"Python의 기본 문법부터 실전 프로젝트까지 모두 다룹니다.\",\n  \"thumbnail\": \"https://example.com/python.png\",\n  \"category\": \"Development\",\n  \"price\": 45000,\n  \"features\": [\n    \"평생 수강\",\n    \"수료증 제공\"\n  ]\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/courses",

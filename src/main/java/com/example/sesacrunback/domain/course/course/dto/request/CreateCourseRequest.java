@@ -1,12 +1,16 @@
 package com.example.sesacrunback.domain.course.course.dto.request;
 
+import com.example.sesacrunback.domain.course.course.entity.Course;
+import com.example.sesacrunback.domain.user.entity.User;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,16 +34,32 @@ public class CreateCourseRequest {
     private String category;
 
     @NotNull(message = "가격은 필수입니다")
+    @Min(value = 0, message = "가격은 0원 이상이어야 합니다")
     private Integer price;
 
-    private Integer originalPrice;
-
-    private Integer discount;
-
-    private List<String> features;
+    private List<String> features = new ArrayList<>();
 
     @Valid
-    private List<CreateSectionRequest> sections;
+    private List<CreateSectionRequest> sections = new ArrayList<>();
+
+    /**
+     * Course 기본 생성만 담당
+     * 상태/구조 조립은 하지 않는다
+     */
+    public Course toEntity(User instructor) {
+        return Course.ofPublished(
+            instructor,
+            title,
+            description,
+            detailedDescription,
+            thumbnail,
+            category,
+            price,
+            features
+        );
+    }
+
+    /* ================= Section ================= */
 
     @Getter
     @NoArgsConstructor
@@ -53,8 +73,18 @@ public class CreateCourseRequest {
         private Integer order;
 
         @Valid
-        private List<CreateLectureRequest> lectures;
+        private List<CreateLectureRequest> lectures = new ArrayList<>();
+
+        public int getOrderOrDefault() {
+            return order != null ? order : 0;
+        }
+
+        public List<CreateLectureRequest> getLecturesOrEmpty() {
+            return lectures != null ? lectures : List.of();
+        }
     }
+
+    /* ================= Lecture ================= */
 
     @Getter
     @NoArgsConstructor
@@ -73,5 +103,13 @@ public class CreateCourseRequest {
         private Integer order;
 
         private Boolean isFree;
+
+        public int getDurationOrDefault() {
+            return duration != null ? duration : 0;
+        }
+
+        public boolean isFreeOrDefault() {
+            return isFree != null && isFree;
+        }
     }
 }
