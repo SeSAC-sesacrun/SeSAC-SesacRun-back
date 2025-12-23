@@ -1,81 +1,144 @@
 package com.example.sesacrunback.domain.course.course.entity;
 
+import com.example.sesacrunback.domain.course.course.converter.StringListJsonConverter;
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseStatus;
 import com.example.sesacrunback.domain.course.section.entity.Section;
-import com.example.sesacrunback.domain.orderItem.entity.OrderItem;
-import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @Table(name = "courses")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Course extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // PK
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id", nullable = false, insertable = false, updatable = false)
+    private com.example.sesacrunback.domain.user.entity.User instructor;
+
+    @Column(name = "instructor_id", nullable = false)
+    private Long instructorId;
+
+    @Column(nullable = false, length = 255)
+    private String title;
+
+    @Column(length = 500)
+    private String description;
+
+    @Column(columnDefinition = "TEXT")
+    private String detailedDescription;
+
+    @Column(columnDefinition = "TEXT")
+    private String thumbnail;
+
+    @Column(length = 100)
+    private String category;
 
     @Column(nullable = false)
-    private String title; // 강의 제목
+    @Builder.Default
+    private Integer price = 0;
+
+    @Column
+    private Integer originalPrice;
+
+    @Column
+    @Builder.Default
+    private Integer discount = 0;
 
     @Column(nullable = false)
-    private String description; // 강의 설명 (짧은)
-
-    private String detailedDescription; // 강의 상세 설명
-
-    @Column(nullable = false)
-    private String thumbnail; // 썸네일 이미지 URL
-
+    @Builder.Default
+    private Double rating = 0.0;
 
     @Column(nullable = false)
-    private  String category; // 카테고리
+    @Builder.Default
+    private Integer reviewCount = 0;
 
     @Column(nullable = false)
-    private Integer price; // 판매가
+    @Builder.Default
+    private Integer studentCount = 0;
 
-    private Integer originalPrice; // 정가 (할인 전 가격)
+    @Convert(converter = StringListJsonConverter.class)
+    @Column(columnDefinition = "JSON")
+    private List<String> features;
 
-    @Column(nullable = false)
-    private String level; // 난이도
-
-    @Column(nullable = false)
-    private String language; // 사용 언어
-
-    @Column(nullable = false)
-    private String duration; // 총 강의 시간
-
-    @Column(nullable = false)
-    private Integer studentCount; // 수강생 수
-
-    @Column(nullable = false)
-    private LocalDate lastUpdated; // 마지막 업데이트 일자
-
-    private LocalDateTime deletedAt; // 삭제일시 (Soft Delete)
-
-    @ManyToOne
-    @JoinColumn(name = "instructor_id",nullable = false)
-    private User instructor; // 강의자
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private CourseStatus status = CourseStatus.PUBLISHED;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Section> sections = new ArrayList<>(); // 강의에 포함된 섹션 목록
+    @OrderBy("order ASC")
+    @org.hibernate.annotations.BatchSize(size = 10)
+    @Builder.Default
+    private List<Section> sections = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course")
-    private List<OrderItem> orderItems = new ArrayList<>(); // 이 강의를 포함하는 주문 항목 목록
+    /**
+     * 비즈니스 로직
+     */
+    public void updateCourseInfo(String title, String description, String detailedDescription,
+                                  String thumbnail, String category, Integer price, Integer originalPrice,
+                                  Integer discount, List<String> features) {
+        if (title != null && !title.isBlank()) {
+            this.title = title;
+        }
+        if (description != null) {
+            this.description = description;
+        }
+        if (detailedDescription != null) {
+            this.detailedDescription = detailedDescription;
+        }
+        if (thumbnail != null) {
+            this.thumbnail = thumbnail;
+        }
+        if (category != null) {
+            this.category = category;
+        }
+        if (price != null) {
+            this.price = price;
+        }
+        if (originalPrice != null) {
+            this.originalPrice = originalPrice;
+        }
+        if (discount != null) {
+            this.discount = discount;
+        }
+        if (features != null) {
+            this.features = features;
+        }
+    }
+
+    public void publish() {
+        this.status = CourseStatus.PUBLISHED;
+    }
+
+    public void archive() {
+        this.status = CourseStatus.ARCHIVED;
+    }
+
+    public void addSection(Section section) {
+        this.sections.add(section);
+    }
+
+    public void incrementStudentCount() {
+        this.studentCount++;
+    }
+
+    /**
+     * 새로운 리뷰 평점 추가 및 평균 재계산
+     * @param newRating 새로 추가된 리뷰의 평점
+     */
+    public void addReview(Double newRating) {
+        this.rating = (this.rating * this.reviewCount + newRating) / (this.reviewCount + 1);
+        this.reviewCount++;
+    }
 }
