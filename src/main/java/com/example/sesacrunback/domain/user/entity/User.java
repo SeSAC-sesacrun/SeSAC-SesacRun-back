@@ -81,7 +81,7 @@ public class User extends BaseTimeEntity {
     public static User from(UserCreateReqDto createReqDto){
         return User.builder()
                    .email(createReqDto.getEmail())
-                   .password(  createReqDto.getPassword())
+                   .password(createReqDto.getPassword())
                    .name(createReqDto.getName())
                    .build();
     }
