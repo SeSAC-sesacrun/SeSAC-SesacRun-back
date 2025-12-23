@@ -2,13 +2,17 @@ package com.example.sesacrunback.domain.recruitment.post.service;
 
 import com.example.sesacrunback.domain.recruitment.post.dto.request.RecruitmentPostCreateReqDto;
 import com.example.sesacrunback.domain.recruitment.post.dto.response.PostDetailResDto;
+import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentCategory;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
+import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentStatus;
 import com.example.sesacrunback.domain.recruitment.post.repository.RecruitmentPostRepository;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,5 +44,12 @@ public class RecruitmentPostService {
         post.increaseViewCount();
 
         return PostDetailResDto.from(post);
+    }
+
+    public Slice<PostDetailResDto> viewPosts(RecruitmentCategory category, RecruitmentStatus status,
+        Pageable pageable) {
+        Slice<RecruitmentPost> posts = recruitmentPostRepository.findPosts(category, status,
+            pageable);
+        return posts.map(PostDetailResDto::from);
     }
 }
