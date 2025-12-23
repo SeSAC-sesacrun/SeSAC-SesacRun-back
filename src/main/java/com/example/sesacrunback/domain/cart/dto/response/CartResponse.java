@@ -6,10 +6,9 @@ import lombok.Getter;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 
 @Getter
-@Builder
 public class CartResponse {
-    private Long cartItemId;
-    private Long courseId;
+    private final Long cartItemId;
+    private final Long courseId;
     private final String courseTitle;
     private final String instructorName;
     private final String thumbnail;
