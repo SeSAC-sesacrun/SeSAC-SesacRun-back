@@ -31,9 +31,8 @@ public class CartResponse {
                 .cartItemId(cartItem.getId())
                 .courseId(course.getId())
                 .courseTitle(course.getTitle())
-                //.instructorName(course.getUser().getName()) // TODO: 강좌이름 변경
-                .instructorName("테스트") //
-                .thumbnail(course.getThumbnail()) // 
+                .instructorName(course.getInstructor().getName())
+                .thumbnail(course.getThumbnail())
                 .price(course.getPrice())
                 .build();
     }
