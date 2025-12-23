@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CartService {
     private final CartRepository cartRepository;
-   private final UserRepository userRepository;
-   private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
     private final OrderItemRepository orderItemRepository;
 
     @Transactional
     public CartResponse create(Long userId, CartCreateRequest req) {
-       User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = findUserById(userId);
        Course course = courseRepository.findById(req.getCourseId()).orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
 
         cartRepository.findByUserAndCourse(user, course).ifPresent(item -> {
@@ -52,7 +52,7 @@ public class CartService {
     }
 
     public List<CartResponse> findAll(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = findUserById(userId);
         List<CartItem> cartItems = cartRepository.findAllByUser(user);
 
         return cartItems.stream()
@@ -62,11 +62,16 @@ public class CartService {
 
     @Transactional
     public void delete(Long itemId, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = findUserById(userId);
         CartItem cartItem = cartRepository.findByIdAndUser(itemId, user)
                 .orElseThrow(() -> new CustomException(ErrorCode.CART_ITEM_NOT_FOUND));
 
         cartRepository.delete(cartItem);
+    }
+
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
 }
