@@ -83,4 +83,7 @@ public class RecruitmentPost extends BaseTimeEntity {
             .build();
     }
 
+    public void increaseViewCount() {
+        this.views++;
+    }
 }

@@ -1,10 +1,13 @@
 package com.example.sesacrunback.domain.recruitment.post.service;
 
 import com.example.sesacrunback.domain.recruitment.post.dto.request.RecruitmentPostCreateReqDto;
+import com.example.sesacrunback.domain.recruitment.post.dto.response.PostDetailResDto;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
 import com.example.sesacrunback.domain.recruitment.post.repository.RecruitmentPostRepository;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
+import com.example.sesacrunback.global.exception.CustomException;
+import com.example.sesacrunback.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,5 +29,16 @@ public class RecruitmentPostService {
 
         RecruitmentPost post = recruitmentPostRepository.save(reqDto.toEntity(reqDto, user));
         return post.getId();
+    }
+
+    @Transactional
+    public PostDetailResDto viewPost(Long postId) {
+        RecruitmentPost post = recruitmentPostRepository.findById(postId)
+            .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        // 조회 수 증가
+        post.increaseViewCount();
+
+        return PostDetailResDto.from(post);
     }
 }
