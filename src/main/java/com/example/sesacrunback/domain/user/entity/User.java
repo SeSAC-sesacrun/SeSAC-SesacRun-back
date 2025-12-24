@@ -6,7 +6,7 @@ import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.recruitment.member.entity.RecruitmentMember;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
-import com.example.sesacrunback.domain.user.dto.request.UserCreateReqDto;
+import com.example.sesacrunback.domain.user.dto.request.SignUpReqDto;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -78,7 +77,7 @@ public class User extends BaseTimeEntity {
         this.name = name;
     }
 
-    public static User from(UserCreateReqDto createReqDto){
+    public static User from(SignUpReqDto createReqDto){
         return User.builder()
                    .email(createReqDto.getEmail())
                    .password(createReqDto.getPassword())

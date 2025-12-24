@@ -1,7 +1,7 @@
 package com.example.sesacrunback.domain.user.controller;
 
 import com.example.sesacrunback.domain.user.dto.request.LoginReqDto;
-import com.example.sesacrunback.domain.user.dto.request.UserCreateReqDto;
+import com.example.sesacrunback.domain.user.dto.request.SignUpReqDto;
 import com.example.sesacrunback.domain.user.service.UserService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class AuthController {
     // 인증 / 토큰 구현전에 확인을 위해 String값으로 결과만 반환
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<String>> signUp(
-        @RequestBody @Valid UserCreateReqDto createReqDto
+        @RequestBody @Valid SignUpReqDto createReqDto
     ) {
         userService.signUp(createReqDto);
 
