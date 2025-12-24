@@ -15,17 +15,6 @@ public class UserResDto {
     private LocalDateTime updatedTime;
 
 
-//    public UserResDto(Long id, String email, String name, String role, LocalDateTime createdTime,
-//        LocalDateTime updatedTime) {
-//
-//        this.id = id;
-//        this.email = email;
-//        this.name = name;
-//        this.role = role;
-//        this.createdTime = createdTime;
-//        this.updatedTime= updatedTime;
-//    }
-
     public static UserResDto from(User user) {
         return UserResDto.builder()
                    .id(user.getId())
