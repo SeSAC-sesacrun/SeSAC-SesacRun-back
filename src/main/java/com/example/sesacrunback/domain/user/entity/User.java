@@ -71,7 +71,7 @@ public class User extends BaseTimeEntity {
     private List<CartItem> cartItems = new ArrayList<>(); // 이 사용자의 장바구니 항목 목록
 
     @Builder
-    public User(String email, String password, String name) {
+    private User(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
