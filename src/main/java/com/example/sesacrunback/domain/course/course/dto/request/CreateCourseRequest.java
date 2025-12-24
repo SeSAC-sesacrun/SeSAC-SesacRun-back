@@ -1,6 +1,8 @@
 package com.example.sesacrunback.domain.course.course.dto.request;
 
 import com.example.sesacrunback.domain.course.course.entity.Course;
+import com.example.sesacrunback.domain.course.section.entity.Section;
+import com.example.sesacrunback.domain.course.lecture.entity.Lecture;
 import com.example.sesacrunback.domain.user.entity.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -42,9 +44,8 @@ public class CreateCourseRequest {
     @Valid
     private List<CreateSectionRequest> sections = new ArrayList<>();
 
-    /**
-     * Course 생성 및 Section/Lecture 조립
-     */
+    /* ================= Course ================= */
+
     public Course toEntity(User instructor) {
         Course course = Course.ofPublished(
             instructor,
@@ -57,10 +58,7 @@ public class CreateCourseRequest {
             features
         );
 
-        sections.forEach(sectionReq ->
-            sectionReq.toEntity(course)
-        );
-
+        sections.forEach(sectionReq -> sectionReq.toEntity(course));
         return course;
     }
 
@@ -80,22 +78,17 @@ public class CreateCourseRequest {
         @Valid
         private List<CreateLectureRequest> lectures = new ArrayList<>();
 
-        public int getOrderOrDefault() {
+        private int orderOrZero() {
             return order != null ? order : 0;
         }
 
-        public List<CreateLectureRequest> getLecturesOrEmpty() {
+        private List<CreateLectureRequest> lecturesOrEmpty() {
             return lectures != null ? lectures : List.of();
         }
 
-        public com.example.sesacrunback.domain.course.section.entity.Section toEntity(Course course) {
-            com.example.sesacrunback.domain.course.section.entity.Section section =
-                course.addSectionForCreate(title, getOrderOrDefault());
-
-            getLecturesOrEmpty().forEach(lectureReq ->
-                lectureReq.toEntity(section)
-            );
-
+        public Section toEntity(Course course) {
+            Section section = course.addSectionForCreate(title, orderOrZero());
+            lecturesOrEmpty().forEach(lectureReq -> lectureReq.toEntity(section));
             return section;
         }
     }
@@ -120,24 +113,23 @@ public class CreateCourseRequest {
 
         private Boolean isFree;
 
-        public int getDurationOrDefault() {
+        private int durationOrZero() {
             return duration != null ? duration : 0;
         }
 
-        public boolean isFreeOrDefault() {
-            return isFree != null && isFree;
+        private boolean freeOrFalse() {
+            return Boolean.TRUE.equals(isFree);
         }
 
-        public com.example.sesacrunback.domain.course.lecture.entity.Lecture toEntity(com.example.sesacrunback.domain.course.section.entity.Section section) {
-            com.example.sesacrunback.domain.course.lecture.entity.Lecture lecture =
-                com.example.sesacrunback.domain.course.lecture.entity.Lecture.builder()
-                    .section(section)
-                    .title(title)
-                    .videoUrl(videoUrl)
-                    .duration(getDurationOrDefault())
-                    .order(order)
-                    .isFree(isFreeOrDefault())
-                    .build();
+        public Lecture toEntity(Section section) {
+            Lecture lecture = Lecture.builder()
+                .section(section)
+                .title(title)
+                .videoUrl(videoUrl)
+                .duration(durationOrZero())
+                .order(order)
+                .isFree(freeOrFalse())
+                .build();
 
             section.addLecture(lecture);
             return lecture;

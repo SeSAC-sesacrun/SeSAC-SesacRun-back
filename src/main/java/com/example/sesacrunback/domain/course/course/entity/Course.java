@@ -160,4 +160,12 @@ public class Course extends BaseTimeEntity {
     public Long getInstructorId() {
         return instructor != null ? instructor.getId() : null;
     }
+
+    /**
+     * 강의 소유자인지 판단
+     */
+    public boolean isOwner(Long userId) {
+        return this.instructor != null
+            && this.instructor.getId().equals(userId);
+    }
 }

@@ -136,9 +136,8 @@ public class CourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
-        // 강사 본인 확인
         Long currentUserId = getCurrentUserId();
-        if (!course.getInstructorId().equals(currentUserId)) {
+        if (!course.isOwner(currentUserId)) {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
