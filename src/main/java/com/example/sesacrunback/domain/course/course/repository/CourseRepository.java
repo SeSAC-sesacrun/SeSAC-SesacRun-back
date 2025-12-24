@@ -47,9 +47,9 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     Page<Course> findByCategory(String category, Pageable pageable);
 
     /**
-     * 강사별 강의 목록
+     * 강사별 강의 목록 (Paging)
      */
-    List<Course> findByInstructor_Id(Long instructorId);
+    Page<Course> findByInstructor_Id(Long instructorId, Pageable pageable);
 
     /* ===============================
      * 검색

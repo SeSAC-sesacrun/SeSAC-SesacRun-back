@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/courses")
 @RequiredArgsConstructor
@@ -72,8 +70,9 @@ public class CourseController {
 
     @GetMapping("/my")
     // @PreAuthorize("hasRole('INSTRUCTOR')") // 인증 시스템 협업 중이므로 주석 처리
-    public ResponseEntity<ApiResponse<List<CourseResponse>>> getMyCourses() {
-        List<CourseResponse> courses = courseService.getMyCourses();
+    public ResponseEntity<ApiResponse<Page<CourseResponse>>> getMyCourses(
+            @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<CourseResponse> courses = courseService.getMyCourses(pageable);
         return ResponseEntity.ok(ApiResponse.success(courses));
     }
 

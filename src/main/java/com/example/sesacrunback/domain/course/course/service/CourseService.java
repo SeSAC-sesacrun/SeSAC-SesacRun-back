@@ -114,16 +114,14 @@ public class CourseService {
     }
 
     /**
-     * 강사의 강의 목록 조회
+     * 강사의 강의 목록 조회 (페이징)
      */
-    public List<CourseResponse> getMyCourses() {
+    public Page<CourseResponse> getMyCourses(Pageable pageable) {
         Long instructorId = getCurrentUserId();
         log.info("Getting courses for instructor ID: {}", instructorId);
 
-        return courseRepository.findByInstructor_Id(instructorId)
-                .stream()
-                .map(CourseResponse::from)
-                .collect(Collectors.toList());
+        return courseRepository.findByInstructor_Id(instructorId, pageable)
+                .map(CourseResponse::from);
     }
 
     /**
