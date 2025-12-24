@@ -19,6 +19,8 @@ public enum ErrorCode {
 
     // 모집
     ALREADY_RECRUITED_MEMBER(HttpStatus.CONFLICT, "이미 해당 모집에 참여 중입니다."),
+    ALREADY_APPLIED(HttpStatus.CONFLICT, "이미 신청된 모임입니다."),
+
 
     // Common
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),
