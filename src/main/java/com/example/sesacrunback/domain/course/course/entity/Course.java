@@ -1,81 +1,171 @@
 package com.example.sesacrunback.domain.course.course.entity;
 
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseStatus;
 import com.example.sesacrunback.domain.course.section.entity.Section;
-import com.example.sesacrunback.domain.orderItem.entity.OrderItem;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Getter
 @Table(name = "courses")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Course extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // PK
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id", nullable = false)
+    private User instructor;
 
     @Column(nullable = false)
-    private String title; // 강의 제목
+    private String title;
+
+    @Column(nullable = false, length = 500)
+    private String description;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String detailedDescription;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String thumbnail;
 
     @Column(nullable = false)
-    private String description; // 강의 설명 (짧은)
-
-    private String detailedDescription; // 강의 상세 설명
+    private String category;
 
     @Column(nullable = false)
-    private String thumbnail; // 썸네일 이미지 URL
-
-
-    @Column(nullable = false)
-    private  String category; // 카테고리
+    private Integer price;
 
     @Column(nullable = false)
-    private Integer price; // 판매가
+    private Integer studentCount = 0;
 
-    private Integer originalPrice; // 정가 (할인 전 가격)
+    @ElementCollection
+    @CollectionTable(
+        name = "course_features",
+        joinColumns = @JoinColumn(name = "course_id")
+    )
+    @Column(name = "feature")
+    private List<String> features = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String level; // 난이도
+    private CourseStatus status;
 
-    @Column(nullable = false)
-    private String language; // 사용 언어
+    @OneToMany(
+        mappedBy = "course",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @OrderBy("order ASC")
+    @org.hibernate.annotations.BatchSize(size = 10)
+    private final List<Section> sections = new ArrayList<>();
 
-    @Column(nullable = false)
-    private String duration; // 총 강의 시간
+    /* ================= 생성 ================= */
 
-    @Column(nullable = false)
-    private Integer studentCount; // 수강생 수
+    /**
+     * 생성 즉시 게시되는 강의 (Phase 1)
+     * Phase 2에서 승인 구조 도입 시 ofPending() 추가 예정
+     */
+    public static Course ofPublished(
+            User instructor,
+            String title,
+            String description,
+            String detailedDescription,
+            String thumbnail,
+            String category,
+            Integer price,
+            List<String> features
+    ) {
+        Course course = new Course();
+        course.instructor = instructor;
+        course.title = title;
+        course.description = description;
+        course.detailedDescription = detailedDescription;
+        course.thumbnail = thumbnail;
+        course.category = category;
+        course.price = price;
+        course.features = features;
+        course.status = CourseStatus.PUBLISHED;
+        course.studentCount = 0;
+        return course;
+    }
 
-    @Column(nullable = false)
-    private LocalDate lastUpdated; // 마지막 업데이트 일자
+    /* ================= 상태 ================= */
 
-    private LocalDateTime deletedAt; // 삭제일시 (Soft Delete)
+    public void archiveByInstructor() {
+        this.status = CourseStatus.ARCHIVED;
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "instructor_id",nullable = false)
-    private User instructor; // 강의자
+    /* ================= 구조 (Create 전용) ================= */
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Section> sections = new ArrayList<>(); // 강의에 포함된 섹션 목록
+    public Section addSectionForCreate(String title, int order) {
+        Section section = Section.builder()
+                .course(this)
+                .title(title)
+                .order(order)
+                .build();
+        this.sections.add(section);
+        return section;
+    }
 
-    @OneToMany(mappedBy = "course")
-    private List<OrderItem> orderItems = new ArrayList<>(); // 이 강의를 포함하는 주문 항목 목록
+    /* ================= Update ================= */
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeDetailedDescription(String detailedDescription) {
+        this.detailedDescription = detailedDescription;
+    }
+
+    public void changeThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public void changeCategory(String category) {
+        this.category = category;
+    }
+
+    public void changePrice(Integer price) {
+        this.price = price;
+    }
+
+    public void changeFeatures(List<String> features) {
+        this.features = features;
+    }
+
+    /* ================= 비즈니스 로직 ================= */
+
+    public void incrementStudentCount() {
+        this.studentCount++;
+    }
+
+    /* ================= 편의 메서드 ================= */
+
+    /**
+     * instructor의 ID 반환 (프록시여도 ID는 가져올 수 있음)
+     */
+    public Long getInstructorId() {
+        return instructor != null ? instructor.getId() : null;
+    }
+
+    /**
+     * 강의 소유자인지 판단
+     */
+    public boolean isOwner(Long userId) {
+        return this.instructor != null
+            && this.instructor.getId().equals(userId);
+    }
 }

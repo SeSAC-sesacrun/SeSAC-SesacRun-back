@@ -3,42 +3,60 @@ package com.example.sesacrunback.domain.course.section.entity;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.course.lecture.entity.Lecture;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @Table(name = "sections")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Section extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // PK
+    private Long id;
 
-    @Column(nullable = false)
-    private String title; // 섹션 제목
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
-    @Column(nullable = false)
-    private Integer orderIndex; // 순서
+    @Column(nullable = false, length = 255)
+    private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id" , nullable = false)
-    private Course course; // 소속된 강의
+    @Column(nullable = false, name = "section_order")
+    private Integer order;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Lecture> lectures = new ArrayList<>(); // 섹션에 포함된 강의 목록
+    @OrderBy("order ASC")
+    @org.hibernate.annotations.BatchSize(size = 20)
+    @Builder.Default
+    private List<Lecture> lectures = new ArrayList<>();
+
+    /**
+     * 비즈니스 로직
+     */
+    public void updateTitle(String title) {
+        if (title != null && !title.isBlank()) {
+            this.title = title;
+        }
+    }
+
+    public void updateOrder(Integer order) {
+        if (order != null) {
+            this.order = order;
+        }
+    }
+
+    public void addLecture(Lecture lecture) {
+        this.lectures.add(lecture);
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    } //이거의 이름을 바꾸고 의미있는 함수명으로 바꿔야함.
 }
