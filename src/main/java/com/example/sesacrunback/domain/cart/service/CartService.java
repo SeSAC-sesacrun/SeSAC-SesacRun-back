@@ -6,17 +6,15 @@ import com.example.sesacrunback.domain.cart.entity.CartItem;
 import com.example.sesacrunback.domain.cart.repository.CartRepository;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.course.course.repository.CourseRepository;
-import com.example.sesacrunback.domain.orderItem.repository.OrderItemRepository;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +23,12 @@ public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
-    private final OrderItemRepository orderItemRepository;
+//    private final OrderItemRepository orderItemRepository;
 
     @Transactional
     public CartResponse create(Long userId, CartCreateRequest req) {
         User user = findUserById(userId);
-       Course course = courseRepository.findById(req.getCourseId()).orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+       Course course = courseRepository.findById(req.getCourseId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
         cartRepository.findByUserAndCourse(user, course).ifPresent(item -> {
             throw new CustomException(ErrorCode.CART_ITEM_ALREADY_EXISTS);
@@ -71,7 +69,7 @@ public class CartService {
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
 }
