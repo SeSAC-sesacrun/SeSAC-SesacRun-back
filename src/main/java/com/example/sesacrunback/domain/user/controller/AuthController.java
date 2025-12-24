@@ -23,9 +23,9 @@ public class AuthController {
     // 인증 / 토큰 구현전에 확인을 위해 String값으로 결과만 반환
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<String>> signUp(
-        @RequestBody @Valid SignUpReqDto createReqDto
+        @RequestBody @Valid SignUpReqDto signUpReqDto
     ) {
-        userService.signUp(createReqDto);
+        userService.signUp(signUpReqDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("회원가입 성공"));
 

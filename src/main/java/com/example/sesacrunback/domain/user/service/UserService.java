@@ -19,14 +19,14 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserResDto signUp(SignUpReqDto createReqDto) {
+    public UserResDto signUp(SignUpReqDto signUpReqDto) {
         // 사용자 중복된 이메일 검증
-        if(userRepository.existsUserByEmail(createReqDto.getEmail())){
+        if(userRepository.existsUserByEmail(signUpReqDto.getEmail())){
             throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
         // DTO를 UserEntity로 변환
-        User user = User.from(createReqDto);
+        User user = SignUpReqDto.toEntity(signUpReqDto);
 
         // 비밀번호 암호화
         // 비밀번호 암호화 부분은 security를 넣으면서 추가 예정
