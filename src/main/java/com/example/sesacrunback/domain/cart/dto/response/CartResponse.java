@@ -15,7 +15,7 @@ public class CartResponse {
     private final Integer price;
 
     @Builder
-    public CartResponse(Long cartItemId, Long courseId, String courseTitle, String instructorName, String thumbnail, Integer price) {
+    private CartResponse(Long cartItemId, Long courseId, String courseTitle, String instructorName, String thumbnail, Integer price) {
         this.cartItemId = cartItemId;
         this.courseId = courseId;
         this.courseTitle = courseTitle;
