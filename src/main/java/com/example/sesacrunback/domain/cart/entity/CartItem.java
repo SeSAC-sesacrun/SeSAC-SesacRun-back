@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +34,9 @@ public class CartItem extends BaseCreateEntity {
     @JoinColumn(name = "course_id",nullable = false)
     private Course course; // 장바구니에 담은 강의
 
+    @Builder
+    public CartItem(User user, Course course) {
+        this.user = user;
+        this.course = course;
+    }
 }
