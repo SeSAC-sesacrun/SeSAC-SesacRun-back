@@ -26,3 +26,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
     defer-datasource-initialization: true
+
+portone:
+  apiKey: 0437155210084248
+  apiSecret: N8G54DGajiWkAsTnhUOunYX2fs0INiK06OAWg1PTrnLS0RicO4Yaih8d9RWdZqL7rnFx7LdK0QtBuViK
