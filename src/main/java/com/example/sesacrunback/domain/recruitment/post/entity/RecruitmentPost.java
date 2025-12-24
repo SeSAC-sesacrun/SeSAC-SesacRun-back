@@ -98,6 +98,7 @@ public class RecruitmentPost extends BaseTimeEntity {
         this.totalMembers = totalMembers;
     }
 
+    // todo 예외를 여기서 던질지 고민
     public boolean isPostOwner(Long userId) {
         return this.author.getId().equals(userId);
     }
