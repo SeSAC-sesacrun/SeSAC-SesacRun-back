@@ -14,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +23,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "recruitment_members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecruitmentMember extends BaseTimeEntity {
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class RecruitmentMember extends BaseTimeEntity { //todo 추후 패키지, 엔티티 이름 수정
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
@@ -41,4 +45,13 @@ public class RecruitmentMember extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // 참여한 사용자
+
+    public static RecruitmentMember of(RecruitmentPost post, User user) {
+        return RecruitmentMember.builder()
+            .role(MemberRole.ORGANIZER)
+            .status(MemberStatus.APPROVED) // 모집자는 항상 승인 상태
+            .post(post)
+            .user(user)
+            .build();
+    }
 }
