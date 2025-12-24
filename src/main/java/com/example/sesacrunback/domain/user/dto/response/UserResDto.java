@@ -1,10 +1,8 @@
 package com.example.sesacrunback.domain.user.dto.response;
 
-import com.example.sesacrunback.domain.user.dto.request.UserCreateReqDto;
 import com.example.sesacrunback.domain.user.entity.User;
 import java.time.LocalDateTime;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 @Builder
 public class UserResDto {
