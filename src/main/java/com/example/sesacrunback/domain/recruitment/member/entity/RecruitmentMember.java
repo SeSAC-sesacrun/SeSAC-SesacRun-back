@@ -46,7 +46,7 @@ public class RecruitmentMember extends BaseTimeEntity { //todo 추후 패키지,
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // 참여한 사용자
 
-    public static RecruitmentMember of(RecruitmentPost post, User user) {
+    public static RecruitmentMember organizer(RecruitmentPost post, User user) {
         return RecruitmentMember.builder()
             .role(MemberRole.ORGANIZER)
             .status(MemberStatus.APPROVED) // 모집자는 항상 승인 상태

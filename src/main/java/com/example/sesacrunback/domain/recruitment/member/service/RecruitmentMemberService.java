@@ -23,7 +23,7 @@ public class RecruitmentMemberService {
         if (recruitmentMemberRepository.existsByPostAndUser(post, user)) {
             throw new CustomException(ErrorCode.ALREADY_RECRUITED_MEMBER);
         }
-        recruitmentMemberRepository.save(RecruitmentMember.of(post, user));
+        recruitmentMemberRepository.save(RecruitmentMember.organizer(post, user));
     }
 
 }
