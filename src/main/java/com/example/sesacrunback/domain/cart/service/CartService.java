@@ -41,10 +41,7 @@ public class CartService {
             throw new CustomException(ErrorCode.COURSE_ALREADY_PURCHASED);
         }
 
-        CartItem cartItem = CartItem.builder()
-                .user(user)
-                .course(course)
-                .build();
+        CartItem cartItem = CartCreateRequest.toEntity(user, course);
 
         CartItem savedItem = cartRepository.save(cartItem);
         return CartResponse.from(savedItem);
