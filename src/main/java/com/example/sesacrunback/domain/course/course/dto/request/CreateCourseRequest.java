@@ -43,11 +43,10 @@ public class CreateCourseRequest {
     private List<CreateSectionRequest> sections = new ArrayList<>();
 
     /**
-     * Course 기본 생성만 담당
-     * 상태/구조 조립은 하지 않는다
+     * Course 생성 및 Section/Lecture 조립
      */
     public Course toEntity(User instructor) {
-        return Course.ofPublished(
+        Course course = Course.ofPublished(
             instructor,
             title,
             description,
@@ -57,6 +56,12 @@ public class CreateCourseRequest {
             price,
             features
         );
+
+        sections.forEach(sectionReq ->
+            sectionReq.toEntity(course)
+        );
+
+        return course;
     }
 
     /* ================= Section ================= */
@@ -81,6 +86,17 @@ public class CreateCourseRequest {
 
         public List<CreateLectureRequest> getLecturesOrEmpty() {
             return lectures != null ? lectures : List.of();
+        }
+
+        public com.example.sesacrunback.domain.course.section.entity.Section toEntity(Course course) {
+            com.example.sesacrunback.domain.course.section.entity.Section section =
+                course.addSectionForCreate(title, getOrderOrDefault());
+
+            getLecturesOrEmpty().forEach(lectureReq ->
+                lectureReq.toEntity(section)
+            );
+
+            return section;
         }
     }
 
@@ -110,6 +126,21 @@ public class CreateCourseRequest {
 
         public boolean isFreeOrDefault() {
             return isFree != null && isFree;
+        }
+
+        public com.example.sesacrunback.domain.course.lecture.entity.Lecture toEntity(com.example.sesacrunback.domain.course.section.entity.Section section) {
+            com.example.sesacrunback.domain.course.lecture.entity.Lecture lecture =
+                com.example.sesacrunback.domain.course.lecture.entity.Lecture.builder()
+                    .section(section)
+                    .title(title)
+                    .videoUrl(videoUrl)
+                    .duration(getDurationOrDefault())
+                    .order(order)
+                    .isFree(isFreeOrDefault())
+                    .build();
+
+            section.addLecture(lecture);
+            return lecture;
         }
     }
 }

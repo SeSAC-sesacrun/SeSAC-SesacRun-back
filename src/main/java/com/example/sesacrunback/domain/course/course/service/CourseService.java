@@ -50,29 +50,8 @@ public class CourseService {
         // User 프록시 생성 (실제 DB 조회 없이 참조만 생성)
         User instructor = entityManager.getReference(User.class, instructorId);
 
-        // ✅ Course 생성 책임을 DTO로 위임
+        // DTO가 엔티티 변환 및 조립 책임을 모두 담당
         Course course = request.toEntity(instructor);
-
-        // ✅ Section / Lecture Stream 처리 (null 보정은 DTO에서 끝)
-        request.getSections().forEach(sectionReq -> {
-
-            var section = course.addSectionForCreate(
-                sectionReq.getTitle(),
-                sectionReq.getOrderOrDefault()
-            );
-
-            sectionReq.getLecturesOrEmpty().stream()
-                .map(lectureReq -> Lecture.builder()
-                    .section(section)
-                    .title(lectureReq.getTitle())
-                    .videoUrl(lectureReq.getVideoUrl())
-                    .duration(lectureReq.getDurationOrDefault())
-                    .order(lectureReq.getOrder())
-                    .isFree(lectureReq.isFreeOrDefault())
-                    .build()
-                )
-                .forEach(section::addLecture);
-        });
 
         return CourseResponse.from(courseRepository.save(course));
     }
@@ -123,11 +102,11 @@ public class CourseService {
     public Page<CourseResponse> getPopularCourses(Pageable pageable) {
         log.info("Getting popular courses");
 
-        // 평점 내림차순, 수강생 수 내림차순 정렬
+        // 수강생 수 내림차순 정렬
         Pageable sortedPageable = PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "rating", "studentCount")
+                Sort.by(Sort.Direction.DESC, "studentCount")
         );
 
         return courseRepository.findAll(sortedPageable)

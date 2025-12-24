@@ -21,8 +21,6 @@ public class CourseDetailResponse {
     private final String thumbnail;
     private final String category;
     private final Integer price;
-    private final Double rating;
-    private final Integer reviewCount;
     private final Integer studentCount;
     private final List<String> features;
     private final CourseStatus status;
@@ -40,8 +38,6 @@ public class CourseDetailResponse {
                 course.getThumbnail(),
                 course.getCategory(),
                 course.getPrice(),
-                course.getRating(),
-                course.getReviewCount(),
                 course.getStudentCount(),
                 course.getFeatures(),
                 course.getStatus(),

@@ -17,8 +17,6 @@ public class CourseResponse {
     private final String thumbnail;
     private final String category;
     private final Integer price;
-    private final Double rating;
-    private final Integer reviewCount;
     private final Integer studentCount;
     private final CourseStatus status;
     private final LocalDateTime createdAt;
@@ -33,8 +31,6 @@ public class CourseResponse {
                 course.getThumbnail(),
                 course.getCategory(),
                 course.getPrice(),
-                course.getRating(),
-                course.getReviewCount(),
                 course.getStudentCount(),
                 course.getStatus(),
                 course.getCreatedAt(),

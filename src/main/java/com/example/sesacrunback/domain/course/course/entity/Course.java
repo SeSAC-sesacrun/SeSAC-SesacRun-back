@@ -45,12 +45,6 @@ public class Course extends BaseTimeEntity {
     private Integer price;
 
     @Column(nullable = false)
-    private Double rating = 0.0;
-
-    @Column(nullable = false)
-    private Integer reviewCount = 0;
-
-    @Column(nullable = false)
     private Integer studentCount = 0;
 
     @ElementCollection
@@ -100,8 +94,6 @@ public class Course extends BaseTimeEntity {
         course.price = price;
         course.features = features;
         course.status = CourseStatus.PUBLISHED;
-        course.rating = 0.0;
-        course.reviewCount = 0;
         course.studentCount = 0;
         return course;
     }
@@ -158,15 +150,6 @@ public class Course extends BaseTimeEntity {
 
     public void incrementStudentCount() {
         this.studentCount++;
-    }
-
-    /**
-     * 새로운 리뷰 평점 추가 및 평균 재계산
-     * @param newRating 새로 추가된 리뷰의 평점
-     */
-    public void addReview(Double newRating) {
-        this.rating = (this.rating * this.reviewCount + newRating) / (this.reviewCount + 1);
-        this.reviewCount++;
     }
 
     /* ================= 편의 메서드 ================= */
