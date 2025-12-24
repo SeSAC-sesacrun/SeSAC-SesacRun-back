@@ -3,6 +3,8 @@ package com.example.sesacrunback.domain.recruitment.member.entity;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
+import com.example.sesacrunback.global.exception.CustomException;
+import com.example.sesacrunback.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -53,5 +55,24 @@ public class RecruitmentMember extends BaseTimeEntity { //todo 추후 패키지,
             .post(post)
             .user(user)
             .build();
+    }
+
+    public static RecruitmentMember participant(RecruitmentPost post, User user) {
+        return RecruitmentMember.builder()
+            .role(MemberRole.PARTICIPANT)
+            .status(MemberStatus.PENDING) // 참여자는 대기 상태
+            .post(post)
+            .user(user)
+            .build();
+    }
+
+    public void validateCanApply() {
+        if (status == MemberStatus.PENDING) {
+            throw new CustomException(ErrorCode.ALREADY_APPLIED);
+        }
+
+        if (status == MemberStatus.APPROVED) {
+            throw new CustomException(ErrorCode.ALREADY_RECRUITED_MEMBER);
+        }
     }
 }
