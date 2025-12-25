@@ -75,4 +75,30 @@ public class RecruitmentMember extends BaseTimeEntity { //todo 추후 패키지,
             throw new CustomException(ErrorCode.ALREADY_RECRUITED_MEMBER);
         }
     }
+
+    public boolean isOrganizer() {
+        return role == MemberRole.ORGANIZER;
+    }
+
+    public void approve() {
+        validatePendingStatus();
+
+        status = MemberStatus.APPROVED;
+    }
+
+    public void reject() {
+        validatePendingStatus();
+
+        status = MemberStatus.REJECTED;
+    }
+
+    private void validatePendingStatus() {
+        if (!isPending()) {
+            throw new CustomException(ErrorCode.MEMBER_STATUS_NOT_PENDING);
+        }
+    }
+
+    private boolean isPending() {
+        return status == MemberStatus.PENDING;
+    }
 }
