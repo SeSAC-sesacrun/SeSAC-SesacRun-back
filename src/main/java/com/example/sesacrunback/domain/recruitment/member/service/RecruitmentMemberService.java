@@ -22,7 +22,7 @@ public class RecruitmentMemberService {
     private final UserRepository userRepository;
 
     public void createRecruitment(RecruitmentPost post, User user) {
-        
+
         // 이미 등록된 멤버인지
         if (recruitmentMemberRepository.existsByPostAndUser(post, user)) {
             throw new CustomException(ErrorCode.ALREADY_RECRUITED_MEMBER);
@@ -33,11 +33,9 @@ public class RecruitmentMemberService {
     @Transactional
     public Long applyToRecruitment(Long postId, Long userId) {
 
-        RecruitmentPost post = recruitmentPostRepository.findById(postId)
-            .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+        RecruitmentPost post = getPostById(postId);
 
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User user = getUserById(userId);
 
         // 이미 신청 여부 검증
         recruitmentMemberRepository.findByPostAndUser(post, user)
@@ -45,5 +43,16 @@ public class RecruitmentMemberService {
 
         recruitmentMemberRepository.save(RecruitmentMember.participant(post, user));
         return post.getId();
+    }
+
+
+    private RecruitmentPost getPostById(Long postId) {
+        return recruitmentPostRepository.findById(postId)
+            .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }
