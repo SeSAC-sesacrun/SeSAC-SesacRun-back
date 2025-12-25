@@ -16,10 +16,15 @@ public enum ErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
     POST_NOT_OWNER(HttpStatus.FORBIDDEN, "해당 게시글의 작성자가 아닙니다."),
     POST_INVALID_TOTAL_MEMBERS(HttpStatus.BAD_REQUEST, "모집 인원은 현재 참여 인원보다 적게 설정할 수 없습니다."),
+    RECRUITMENT_FULL(HttpStatus.CONFLICT, "모집 인원이 모두 찼습니다."),
 
     // 모임
     ALREADY_RECRUITED_MEMBER(HttpStatus.CONFLICT, "이미 해당 모임에 참여 중입니다."),
     ALREADY_APPLIED(HttpStatus.CONFLICT, "이미 신청된 모임입니다."),
+    NOT_RECRUITMENT_MEMBER(HttpStatus.FORBIDDEN, "해당 모임의 멤버가 아닙니다."),
+    NOT_RECRUITMENT_ORGANIZER(HttpStatus.FORBIDDEN, "요청을 처리할 권한이 없습니다."),
+    RECRUITED_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "모임 참여 신청을 찾을 수 없습니다."),
+    MEMBER_STATUS_NOT_PENDING(HttpStatus.CONFLICT, "대기 상태가 아닙니다."),
 
 
     // Common
