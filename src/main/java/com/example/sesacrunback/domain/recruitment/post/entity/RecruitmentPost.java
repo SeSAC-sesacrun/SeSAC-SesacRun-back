@@ -109,4 +109,15 @@ public class RecruitmentPost extends BaseTimeEntity {
             throw new CustomException(ErrorCode.POST_INVALID_TOTAL_MEMBERS);
         }
     }
+
+    public void increaseCurrentCount() {
+        validateCapacity();
+        currentMembers++;
+    }
+
+    private void validateCapacity() {
+        if (currentMembers >= totalMembers) {
+            throw new CustomException(ErrorCode.RECRUITMENT_FULL);
+        }
+    }
 }
