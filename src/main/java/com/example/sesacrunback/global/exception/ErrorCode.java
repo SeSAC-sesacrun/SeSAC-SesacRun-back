@@ -17,8 +17,8 @@ public enum ErrorCode {
     POST_NOT_OWNER(HttpStatus.FORBIDDEN, "해당 게시글의 작성자가 아닙니다."),
     POST_INVALID_TOTAL_MEMBERS(HttpStatus.BAD_REQUEST, "모집 인원은 현재 참여 인원보다 적게 설정할 수 없습니다."),
 
-    // 모집
-    ALREADY_RECRUITED_MEMBER(HttpStatus.CONFLICT, "이미 해당 모집에 참여 중입니다."),
+    // 모임
+    ALREADY_RECRUITED_MEMBER(HttpStatus.CONFLICT, "이미 해당 모임에 참여 중입니다."),
     ALREADY_APPLIED(HttpStatus.CONFLICT, "이미 신청된 모임입니다."),
 
 
