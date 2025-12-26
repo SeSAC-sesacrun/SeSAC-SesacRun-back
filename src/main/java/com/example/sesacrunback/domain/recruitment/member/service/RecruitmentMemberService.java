@@ -43,6 +43,9 @@ public class RecruitmentMemberService {
         recruitmentMemberRepository.findByPostAndUser(post, user)
             .ifPresent(RecruitmentMember::validateCanApply);
 
+        // 정원 초과 검증
+        post.validateCapacity();
+
         recruitmentMemberRepository.save(RecruitmentMember.participant(post, user));
         return post.getId();
     }
@@ -68,7 +71,6 @@ public class RecruitmentMemberService {
         switch (reqDto.getStatus()) {
             case MemberStatus.APPROVED -> {
                 post.increaseCurrentCount();
-                member.approve();
             }
 
             case MemberStatus.REJECTED -> {
