@@ -13,4 +13,6 @@ public interface RecruitmentMemberRepository extends JpaRepository <RecruitmentM
     boolean existsByPostAndUser(RecruitmentPost post, User user);
 
     Optional<RecruitmentMember> findByPostAndUser(RecruitmentPost post, User user);
+
+    Optional<RecruitmentMember> findTopByPostAndUserOrderByCreatedAtDesc(RecruitmentPost post, User user);
 }

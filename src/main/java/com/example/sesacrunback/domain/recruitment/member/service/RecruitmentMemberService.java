@@ -40,7 +40,7 @@ public class RecruitmentMemberService {
         User user = getUserById(userId);
 
         // 이미 신청 여부 검증
-        recruitmentMemberRepository.findByPostAndUser(post, user)
+        recruitmentMemberRepository.findTopByPostAndUserOrderByCreatedAtDesc(post, user)
             .ifPresent(RecruitmentMember::validateCanApply);
 
         // 정원 초과 검증
@@ -51,7 +51,8 @@ public class RecruitmentMemberService {
     }
 
     @Transactional
-    public void updateMemberStatus(Long postId, Long memberId, Long userId, MemberUpdateReqDto reqDto) {
+    public void updateMemberStatus(Long postId, Long memberId, Long userId,
+        MemberUpdateReqDto reqDto) {
 
         RecruitmentPost post = getPostById(postId);
         User user = getUserById(userId);
