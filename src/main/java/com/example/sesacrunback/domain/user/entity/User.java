@@ -6,8 +6,8 @@ import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.recruitment.member.entity.RecruitmentMember;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
-import com.example.sesacrunback.domain.user.dto.request.SignUpReqDto;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,7 +18,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -50,7 +49,6 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private UserRole role = UserRole.USER; // 역할 (일반 사용자, 강의자)
 
-    private LocalDateTime deletedAt; // 삭제일시 (Soft Delete)
 
     @OneToMany(mappedBy = "instructor")
     private List<Course> createdCourses = new ArrayList<>(); // 이 사용자가 생성한 강의 목록
@@ -58,7 +56,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "author")
     private List<RecruitmentPost> createdRecruitmentPosts = new ArrayList<>(); // 이 사용자가 작성한 모집글 목록
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.REMOVE , orphanRemoval = true)
     private List<Order> orders = new ArrayList<>(); // 이 사용자의 주문 목록
 
     @OneToMany(mappedBy = "sender")
@@ -67,7 +65,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<RecruitmentMember> recruitmentMemberships = new ArrayList<>(); // 이 사용자가 참여한 모집 그룹 목록
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.REMOVE , orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>(); // 이 사용자의 장바구니 항목 목록
 
     @Builder
