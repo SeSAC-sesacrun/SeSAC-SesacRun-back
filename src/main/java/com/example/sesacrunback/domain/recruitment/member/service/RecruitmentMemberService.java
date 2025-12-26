@@ -70,6 +70,7 @@ public class RecruitmentMemberService {
 
         switch (reqDto.getStatus()) {
             case MemberStatus.APPROVED -> {
+                member.approve();
                 post.increaseCurrentCount();
             }
 
