@@ -60,7 +60,7 @@ public class UserService {
         String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
         String refreshToken = jwtProvider.createRefreshToken(user.getEmail());
 
-        return LoginResDto.of(accessToken, refreshToken);
+        return LoginResDto.of(accessToken , refreshToken , user.getRole());
 
     }
     

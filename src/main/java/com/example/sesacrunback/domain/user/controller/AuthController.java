@@ -3,8 +3,10 @@ package com.example.sesacrunback.domain.user.controller;
 import com.example.sesacrunback.domain.user.dto.request.LoginReqDto;
 import com.example.sesacrunback.domain.user.dto.request.SignUpReqDto;
 import com.example.sesacrunback.domain.user.dto.response.LoginResDto;
+import com.example.sesacrunback.domain.user.entity.UserRole;
 import com.example.sesacrunback.domain.user.service.UserService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
+import com.example.sesacrunback.global.security.JwtProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import  org.springframework.http.HttpHeaders;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -33,11 +36,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResDto>> login(
+    public ResponseEntity<ApiResponse<UserRole>> login(
         @RequestBody @Valid LoginReqDto loginReqDto
     ) {
+        LoginResDto resDto = userService.login(loginReqDto);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + resDto.getAccessToken());
+        headers.set("Refresh-Token",resDto.getRefreshToken());
 
 
-        return ResponseEntity.ok().body(ApiResponse.success( userService.login(loginReqDto)));
+        return ResponseEntity.ok().headers(headers).body(ApiResponse.success(resDto.getRole()));
     }
 }
