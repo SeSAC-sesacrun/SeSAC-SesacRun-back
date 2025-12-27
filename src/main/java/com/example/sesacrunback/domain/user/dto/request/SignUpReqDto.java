@@ -29,17 +29,14 @@ public class SignUpReqDto {
 
 
 
-    public static User toEntity(SignUpReqDto createReqDto){
+    public static User toEntity(SignUpReqDto createReqDto, String encode){
         return User.builder()
                    .email(createReqDto.getEmail())
-                   .password(createReqDto.getPassword())
+                   .password(encode)
                    .name(createReqDto.getName())
                    .build();
     }
 
-    //passwordEncoder 작업을 Service에서 진행해야 할지 고민중..
-    public void passwordEncoder(){
-       this.password = passwordEncoder.encode(this.password);
-    }
+
 
 }
