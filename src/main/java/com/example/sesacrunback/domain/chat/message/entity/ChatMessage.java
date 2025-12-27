@@ -13,6 +13,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +22,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "chat_messages")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChatMessage extends BaseCreateEntity {
 
     @Id
@@ -36,4 +40,12 @@ public class ChatMessage extends BaseCreateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
     private User sender; // 발신자
+
+    public static ChatMessage of(String content, Chat chat, User sender) {
+        return ChatMessage.builder()
+            .content(content)
+            .chat(chat)
+            .sender(sender)
+            .build();
+    }
 }
