@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // 구독 prefix
         // 클라이언트가 메시지를 받을 때
-        registry.enableSimpleBroker("/sub");
+        registry.enableSimpleBroker("/sub", "/queue");
 
         // 발행 prefix
         // 클라이언트가 서버로 메시지를 보낼 때
