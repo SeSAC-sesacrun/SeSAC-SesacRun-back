@@ -15,6 +15,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +24,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "chat_participants")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChatParticipant extends BaseCreateEntity {
 
     @Id
@@ -40,5 +44,14 @@ public class ChatParticipant extends BaseCreateEntity {
     private ChatRole role; // HOST, GUEST
 
     private LocalDateTime lastReadAt; // 읽음 처리용
+
+    public static ChatParticipant of(Chat chat, User user, ChatRole role) {
+        return ChatParticipant.builder()
+            .chat(chat)
+            .user(user)
+            .role(role)
+            .lastReadAt(LocalDateTime.now())
+            .build();
+    }
 
 }
