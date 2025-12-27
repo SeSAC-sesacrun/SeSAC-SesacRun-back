@@ -2,6 +2,7 @@ package com.example.sesacrunback.domain.user.controller;
 
 import com.example.sesacrunback.domain.user.dto.request.LoginReqDto;
 import com.example.sesacrunback.domain.user.dto.request.SignUpReqDto;
+import com.example.sesacrunback.domain.user.dto.response.LoginResDto;
 import com.example.sesacrunback.domain.user.service.UserService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -32,12 +33,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(
+    public ResponseEntity<ApiResponse<LoginResDto>> login(
         @RequestBody @Valid LoginReqDto loginReqDto
     ) {
 
-        userService.login(loginReqDto);
 
-        return ResponseEntity.ok().body(ApiResponse.success("로그인 성공"));
+        return ResponseEntity.ok().body(ApiResponse.success( userService.login(loginReqDto)));
     }
 }
