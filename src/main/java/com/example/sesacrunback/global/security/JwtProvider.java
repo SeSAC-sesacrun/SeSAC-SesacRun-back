@@ -1,5 +1,6 @@
 package com.example.sesacrunback.global.security;
 
+import com.example.sesacrunback.domain.user.entity.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -24,7 +25,7 @@ public class JwtProvider {
     }
 
     // 엑세스 토큰 생성
-    public String createAccessToken(String email, String role){
+    public String createAccessToken(String email, UserRole role){
         return Jwts.builder()
                    .setSubject(email)
                    .claim("role", role)
