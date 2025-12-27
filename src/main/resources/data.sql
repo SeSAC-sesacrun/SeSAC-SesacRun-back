@@ -1,8 +1,8 @@
 -- Users
 INSERT INTO users (email, password, name, role, created_at, updated_at) VALUES
-('instructor@test.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', '김강사', 'INSTRUCTOR', NOW(), NOW()),
-('user1@test.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', '이학생', 'USER', NOW(), NOW()),
-('user2@test.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', '박학생', 'USER', NOW(), NOW());
+('instructor@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '김강사', 'INSTRUCTOR', NOW(), NOW()),
+('user1@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '이학생', 'USER', NOW(), NOW()),
+('user2@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '박학생', 'USER', NOW(), NOW());
 
 -- Courses
 INSERT INTO courses (title, description, detailed_description, thumbnail, category, price, student_count, status, instructor_id, created_at, updated_at) VALUES
