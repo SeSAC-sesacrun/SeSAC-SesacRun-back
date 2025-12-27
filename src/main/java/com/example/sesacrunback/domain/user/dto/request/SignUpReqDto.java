@@ -2,15 +2,19 @@ package com.example.sesacrunback.domain.user.dto.request;
 
 import com.example.sesacrunback.domain.user.entity.User;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@NoArgsConstructor
 @Getter
+@Setter
+@RequiredArgsConstructor
 public class SignUpReqDto {
+    private final PasswordEncoder passwordEncoder;
+
 
     @NotBlank(message = "이메일은 필수입니다.")
     @Email
@@ -24,12 +28,18 @@ public class SignUpReqDto {
     private String name;
 
 
+
     public static User toEntity(SignUpReqDto createReqDto){
         return User.builder()
                    .email(createReqDto.getEmail())
                    .password(createReqDto.getPassword())
                    .name(createReqDto.getName())
                    .build();
+    }
+
+    //passwordEncoder 작업을 Service에서 진행해야 할지 고민중..
+    public void passwordEncoder(){
+       this.password = passwordEncoder.encode(this.password);
     }
 
 }
