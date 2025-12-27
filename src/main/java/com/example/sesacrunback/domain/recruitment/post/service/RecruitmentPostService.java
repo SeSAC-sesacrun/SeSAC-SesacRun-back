@@ -1,5 +1,6 @@
 package com.example.sesacrunback.domain.recruitment.post.service;
 
+import com.example.sesacrunback.domain.recruitment.member.service.RecruitmentMemberService;
 import com.example.sesacrunback.domain.recruitment.post.dto.request.RecruitmentPostCreateReqDto;
 import com.example.sesacrunback.domain.recruitment.post.dto.request.RecruitmentPostUpdateReqDto;
 import com.example.sesacrunback.domain.recruitment.post.dto.response.PostDetailResDto;
@@ -24,6 +25,7 @@ public class RecruitmentPostService {
 
     private final UserRepository userRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
+    private final RecruitmentMemberService recruitmentMemberService;
 
     @Transactional
     public Long createPost(RecruitmentPostCreateReqDto reqDto, Long userId) {
@@ -33,6 +35,10 @@ public class RecruitmentPostService {
             .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
 
         RecruitmentPost post = recruitmentPostRepository.save(reqDto.toEntity(user));
+
+        // 모집 생성
+        recruitmentMemberService.createRecruitment(post, user);
+
         return post.getId();
     }
 
