@@ -6,6 +6,8 @@ import com.example.sesacrunback.global.common.dto.ValidationError;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -58,5 +60,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .badRequest()
             .body(ApiResponse.error(error));
+    }
+
+    // 웹소켓 예외
+    @MessageExceptionHandler(CustomException.class)
+    @SendToUser("/queue/errors") // 연결된 클라이언트로 보냄
+    public ApiResponse<?> handleWebSocketException(CustomException e) {
+        return ApiResponse.error(ApiError.of(e.getErrorCode()));
     }
 }
