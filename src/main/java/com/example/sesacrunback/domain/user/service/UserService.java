@@ -35,7 +35,7 @@ public class UserService {
         //passwordEncoder 작업을 Service에서 진행해야 할지 고민중..
 
         // DTO를 UserEntity로 변환
-        User user = SignUpReqDto.toEntity(signUpReqDto,passwordEncoder.encode(signUpReqDto.getPassword()));
+        User user = signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()));
 
 
         User saved = userRepository.save(user);

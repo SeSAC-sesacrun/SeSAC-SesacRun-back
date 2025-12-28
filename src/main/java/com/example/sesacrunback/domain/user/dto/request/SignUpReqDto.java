@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @RequiredArgsConstructor
@@ -27,11 +25,11 @@ public class SignUpReqDto {
 
 
 
-    public static User toEntity(SignUpReqDto createReqDto, String encode){
+    public User toEntity(String encode){
         return User.builder()
-                   .email(createReqDto.getEmail())
+                   .email(email)
                    .password(encode)
-                   .name(createReqDto.getName())
+                   .name(email)
                    .build();
     }
 
