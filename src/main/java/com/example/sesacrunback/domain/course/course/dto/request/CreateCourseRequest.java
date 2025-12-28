@@ -122,14 +122,14 @@ public class CreateCourseRequest {
         }
 
         public Lecture toEntity(Section section) {
-            Lecture lecture = Lecture.builder()
-                .section(section)
-                .title(title)
-                .videoUrl(videoUrl)
-                .duration(durationOrZero())
-                .order(order)
-                .isFree(freeOrFalse())
-                .build();
+            Lecture lecture = Lecture.of(
+                section,
+                title,
+                order,
+                videoUrl,
+                durationOrZero(),
+                freeOrFalse()
+            );
 
             section.addLecture(lecture);
             return lecture;
