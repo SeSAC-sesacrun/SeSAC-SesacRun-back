@@ -10,10 +10,8 @@ import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class SignUpReqDto {
-    private final PasswordEncoder passwordEncoder;
 
 
     @NotBlank(message = "이메일은 필수입니다.")
