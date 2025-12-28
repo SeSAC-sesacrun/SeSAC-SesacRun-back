@@ -31,14 +31,9 @@ public class UserService {
             throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
-        // 비밀번호 암호화
-        //passwordEncoder 작업을 Service에서 진행해야 할지 고민중..
 
-        // DTO를 UserEntity로 변환
-        User user = signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword()));
-
-
-        User saved = userRepository.save(user);
+        // 비밀번호 암호화 , DTO를 UserEntity로 변환
+        User saved = userRepository.save(signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword())));
 
 
         return UserResDto.from(saved);
