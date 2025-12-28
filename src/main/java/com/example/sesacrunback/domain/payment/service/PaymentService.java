@@ -59,7 +59,7 @@ public class PaymentService {
         }
 
         // 5. Order 엔티티 생성 (OrderItem 포함)
-        Order order = Order.createOrder(user, cartItems);
+        Order order = Order.createOrder(user, cartItems, request.getMerchantUid());
 
         // 6. Payment 엔티티 생성
         Payment payment = Payment.builder()

@@ -65,10 +65,10 @@ public class Order extends BaseTimeEntity {
         this.status = status;
     }
 
-    public static Order createOrder(User user, List<CartItem> cartItems) {
+    public static Order createOrder(User user, List<CartItem> cartItems, String merchantUid) {
         Order order = Order.builder()
                 .user(user)
-                .orderNumber(UUID.randomUUID().toString())
+                .orderNumber(merchantUid)
                 .totalAmount(
                         cartItems.stream()
                                 .mapToInt(item -> item.getCourse().getPrice())
@@ -87,6 +87,6 @@ public class Order extends BaseTimeEntity {
 
     // 결제 완료 시 주문 상태 변경
     public void completePayment() {
-        this.status = OrderState.CREATED;
+        this.status = OrderState.COMPLETED;;
     }
 }
