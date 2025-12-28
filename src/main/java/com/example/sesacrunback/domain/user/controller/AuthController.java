@@ -4,7 +4,7 @@ import com.example.sesacrunback.domain.user.dto.request.LoginReqDto;
 import com.example.sesacrunback.domain.user.dto.request.SignUpReqDto;
 import com.example.sesacrunback.domain.user.dto.response.LoginResDto;
 import com.example.sesacrunback.domain.user.entity.UserRole;
-import com.example.sesacrunback.domain.user.service.UserService;
+import com.example.sesacrunback.domain.user.service.AuthService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import com.example.sesacrunback.global.security.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -24,14 +24,14 @@ import  org.springframework.http.HttpHeaders;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
     // 인증 / 토큰 구현전에 확인을 위해 String값으로 결과만 반환
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<String>> signUp(
         @RequestBody @Valid SignUpReqDto signUpReqDto
     ) {
-        userService.signUp(signUpReqDto);
+        authService.signUp(signUpReqDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("회원가입 성공"));
 
@@ -41,9 +41,9 @@ public class AuthController {
     public ResponseEntity<ApiResponse<UserRole>> login(
         @RequestBody @Valid LoginReqDto loginReqDto
     ) {
-        LoginResDto resDto = userService.login(loginReqDto);
+        LoginResDto resDto = authService.login(loginReqDto);
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + resDto.getAccessToken());
+        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getAccessToken());
         headers.set("Refresh-Token", resDto.getRefreshToken());
 
         return ResponseEntity.ok().headers(headers).body(ApiResponse.success(resDto.getRole()));
