@@ -1,8 +1,13 @@
 package com.example.sesacrunback.global.security;
 
 import com.example.sesacrunback.domain.user.entity.UserRole;
+import com.example.sesacrunback.global.exception.CustomException;
+import com.example.sesacrunback.global.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -57,8 +62,16 @@ public class JwtProvider {
         try{
             getClaims(token);
             return true;
-        }catch (Exception e){
-            return false;
+        }catch (ExpiredJwtException e) {
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+        } catch (SecurityException e) {
+            throw new CustomException(ErrorCode.INVALID_SIGNATURE);
+        } catch (MalformedJwtException e) {
+            throw new CustomException(ErrorCode.MALFORMED_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            throw new CustomException(ErrorCode.UNSUPPORTED_TOKEN);
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(ErrorCode.EMPTY_TOKEN);
         }
     }
 

@@ -7,7 +7,6 @@ import com.example.sesacrunback.domain.user.entity.UserRole;
 import com.example.sesacrunback.domain.user.service.UserService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import com.example.sesacrunback.global.security.CustomUserDetails;
-import com.example.sesacrunback.global.security.JwtProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
