@@ -6,6 +6,8 @@ import com.example.sesacrunback.domain.cart.entity.CartItem;
 import com.example.sesacrunback.domain.cart.repository.CartRepository;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.course.course.repository.CourseRepository;
+import com.example.sesacrunback.domain.order.entity.OrderState;
+import com.example.sesacrunback.domain.orderItem.repository.OrderItemRepository;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
 import com.example.sesacrunback.global.exception.CustomException;
@@ -24,7 +26,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
-//    private final OrderItemRepository orderItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Transactional
     public CartResponse create(Long userId, CartCreateRequest req) {
@@ -34,11 +36,9 @@ public class CartService {
         cartRepository.findByUserAndCourse(user, course).ifPresent(item -> {
             throw new CustomException(ErrorCode.CART_ITEM_ALREADY_EXISTS);
         });
-        // TODo : orderItemRepository 생성 후
-        //boolean alreadyPurchased = orderItemRepository.existsByOrderUserAndCourseIdAndOrderStatus(user, course.getId(), OrderState.ORDER);
-        boolean isOrderExist = false;
+        boolean isOrderExist = orderItemRepository.existsByOrderUserAndCourseIdAndOrderStatus(user, course.getId(), OrderState.ORDER);
         if (isOrderExist) {
-            throw new CustomException(ErrorCode.COURSE_ALREADY_PURCHASED);
+            throw new CustomException(ErrorCode.ORDER_ALREADY_EXISTS);
         }
 
         CartItem cartItem = CartCreateRequest.toEntity(user, course);
