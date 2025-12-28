@@ -22,7 +22,7 @@ public class LectureCreateReqDto {
     private final Integer order;
 
     @NotBlank(message = "영상 URL은 필수입니다.")
-    @Size(max = 255)
+    @Size(max = 500)
     private final String videoUrl;
 
     private final Integer duration;
