@@ -55,14 +55,13 @@ public class LectureService {
         Lecture lecture = getLectureById(lectureId);
         validateLectureOwner(lecture, userId);
 
-        lecture.updateLectureInfo(
+        lecture.update(
                 reqDto.getTitle(),
-                reqDto.getDuration(),
+                reqDto.getOrder(),
                 reqDto.getVideoUrl(),
+                reqDto.getDuration(),
                 reqDto.getIsFree()
         );
-
-        lecture.updateOrder(reqDto.getOrder());
 
         return lecture.getId();
     }

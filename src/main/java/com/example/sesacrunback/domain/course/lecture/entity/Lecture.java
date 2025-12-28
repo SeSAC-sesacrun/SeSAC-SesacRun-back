@@ -62,29 +62,11 @@ public class Lecture extends BaseTimeEntity {
 
     /* ========= 비즈니스 로직 ========= */
 
-    public void updateLectureInfo(
-            String title,
-            Integer duration,
-            String videoUrl,
-            Boolean isFree
-    ) {
-        if (title != null && !title.isBlank()) {
-            this.title = title;
-        }
-        if (duration != null) {
-            this.duration = duration;
-        }
-        if (videoUrl != null && !videoUrl.isBlank()) {
-            this.videoUrl = videoUrl;
-        }
-        if (isFree != null) {
-            this.isFree = isFree;
-        }
-    }
-
-    public void updateOrder(Integer order) {
-        if (order != null) {
-            this.order = order;
-        }
+    public void update(String title, Integer order, String videoUrl, Integer duration, Boolean isFree) {
+        this.title = title;
+        this.order = order;
+        this.videoUrl = videoUrl;
+        this.duration = duration != null ? duration : 0;
+        this.isFree = isFree != null ? isFree : false;
     }
 }
