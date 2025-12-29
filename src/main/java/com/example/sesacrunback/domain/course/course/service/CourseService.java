@@ -1,5 +1,6 @@
 package com.example.sesacrunback.domain.course.course.service;
 
+import com.example.sesacrunback.domain.course.course.dto.request.CourseUpdateReqDto;
 import com.example.sesacrunback.domain.course.course.dto.request.CreateCourseRequest;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseDetailResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
@@ -125,20 +126,51 @@ public class CourseService {
     }
 
     /**
+     * 강의 수정
+     */
+    @Transactional
+    public Long updateCourse(Long courseId, CourseUpdateReqDto reqDto) {
+        log.info("Updating course with ID: {}", courseId);
+
+        Course course = getCourseById(courseId);
+        Long currentUserId = getCurrentUserId();
+        validateCourseOwner(course, currentUserId);
+
+        course.updateCourse(
+                reqDto.getTitle(),
+                reqDto.getDescription(),
+                reqDto.getDetailedDescription(),
+                reqDto.getThumbnail(),
+                reqDto.getCategory(),
+                reqDto.getPrice(),
+                reqDto.getFeatures()
+        );
+
+        return course.getId();
+    }
+
+    /**
      * 강의 삭제
      */
     @Transactional
     public void deleteCourse(Long courseId) {
         log.info("Deleting course with ID: {}", courseId);
 
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
-
+        Course course = getCourseById(courseId);
         Long currentUserId = getCurrentUserId();
-        if (!course.isOwner(currentUserId)) {
-            throw new CustomException(ErrorCode.FORBIDDEN);
-        }
+        validateCourseOwner(course, currentUserId);
 
         courseRepository.delete(course);
+    }
+
+    private Course getCourseById(Long courseId) {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COURSE_NOT_FOUND));
+    }
+
+    private void validateCourseOwner(Course course, Long userId) {
+        if (!course.isOwner(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
     }
 }

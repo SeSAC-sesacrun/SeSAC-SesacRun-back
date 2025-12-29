@@ -37,26 +37,35 @@ public class Section extends BaseTimeEntity {
     @Builder.Default
     private List<Lecture> lectures = new ArrayList<>();
 
+    /* ========= 생성 ========= */
+
+    public static Section of(Course course, String title, Integer order) {
+        return Section.builder()
+                .course(course)
+                .title(title)
+                .order(order)
+                .build();
+    }
+
     /**
      * 비즈니스 로직
      */
-    public void updateTitle(String title) {
-        if (title != null && !title.isBlank()) {
-            this.title = title;
-        }
-    }
-
-    public void updateOrder(Integer order) {
-        if (order != null) {
-            this.order = order;
-        }
-    }
+    /* ========= 구조 (Create 전용) ========= */
 
     public void addLecture(Lecture lecture) {
         this.lectures.add(lecture);
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
-    } //이거의 이름을 바꾸고 의미있는 함수명으로 바꿔야함.
+    /* ========= 업데이트 ========= */
+
+    public void updateSection(String title, Integer order) {
+        this.title = title;
+        this.order = order;
+    }
+
+    /* ========= 권한 위임 ========= */
+
+    public boolean isOwnedBy(Long userId) {
+        return this.course.isOwner(userId);
+    }
 }
