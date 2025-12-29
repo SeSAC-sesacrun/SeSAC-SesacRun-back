@@ -22,4 +22,16 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
      * - 필요 시 리스트 조회 API용
      */
     List<Section> findByCourseIdOrderByOrderAsc(Long courseId);
+
+    /**
+     * 같은 Course 내에서 특정 order를 가진 Section이 존재하는지 확인
+     * (수정 시 자기 자신은 제외하고 확인)
+     */
+    boolean existsByCourseIdAndOrderAndIdNot(Long courseId, Integer order, Long id);
+
+    /**
+     * 같은 Course 내에서 특정 order를 가진 Section이 존재하는지 확인
+     * (생성 시 사용)
+     */
+    boolean existsByCourseIdAndOrder(Long courseId, Integer order);
 }

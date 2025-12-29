@@ -59,6 +59,12 @@ public class SectionService {
         Section section = getSectionById(sectionId);
         validateSectionOwner(section, userId);
 
+        // Order 중복 검증 (자기 자신 제외)
+        if (sectionRepository.existsByCourseIdAndOrderAndIdNot(
+                section.getCourse().getId(), reqDto.getOrder(), sectionId)) {
+            throw new CustomException(ErrorCode.SECTION_ORDER_DUPLICATE);
+        }
+
         section.updateSection(
                 reqDto.getTitle(),
                 reqDto.getOrder()

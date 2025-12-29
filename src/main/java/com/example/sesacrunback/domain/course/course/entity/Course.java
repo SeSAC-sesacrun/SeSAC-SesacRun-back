@@ -118,6 +118,24 @@ public class Course extends BaseTimeEntity {
 
     /* ================= Update ================= */
 
+    public void updateCourse(
+            String title,
+            String description,
+            String detailedDescription,
+            String thumbnail,
+            String category,
+            Integer price,
+            List<String> features
+    ) {
+        this.title = title;
+        this.description = description;
+        this.detailedDescription = detailedDescription;
+        this.thumbnail = thumbnail;
+        this.category = category;
+        this.price = price;
+        this.features = features != null ? features : new ArrayList<>();
+    }
+
     public void changeTitle(String title) {
         this.title = title;
     }

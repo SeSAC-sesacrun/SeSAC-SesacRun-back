@@ -23,7 +23,8 @@ public class LectureUpdateReqDto {
     @Size(max = 500)
     private final String videoUrl;
 
-    @Min(value = 0, message = "재생 시간은 0 이상이어야 합니다.")
+    @NotNull(message = "영상 길이는 필수입니다.")
+    @Min(value = 1, message = "영상 길이는 1초 이상이어야 합니다.")
     private final Integer duration;
 
     private final Boolean isFree;

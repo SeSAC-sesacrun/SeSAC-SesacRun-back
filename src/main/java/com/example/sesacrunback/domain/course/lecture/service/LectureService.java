@@ -30,9 +30,17 @@ public class LectureService {
         Section section = getSectionById(sectionId);
         validateSectionOwner(section, userId);
 
-        Lecture lecture = lectureRepository.save(
-                reqDto.toEntity(section)
-        );
+        // Order 중복 검증
+        if (lectureRepository.existsBySectionIdAndOrder(sectionId, reqDto.getOrder())) {
+            throw new CustomException(ErrorCode.LECTURE_ORDER_DUPLICATE);
+        }
+
+        Lecture lecture = reqDto.toEntity(section);
+
+        // 양방향 관계 동기화
+        section.addLecture(lecture);
+
+        lectureRepository.save(lecture);
 
         return lecture.getId();
     }
@@ -54,6 +62,12 @@ public class LectureService {
 
         Lecture lecture = getLectureById(lectureId);
         validateLectureOwner(lecture, userId);
+
+        // Order 중복 검증 (자기 자신 제외)
+        if (lectureRepository.existsBySectionIdAndOrderAndIdNot(
+                lecture.getSection().getId(), reqDto.getOrder(), lectureId)) {
+            throw new CustomException(ErrorCode.LECTURE_ORDER_DUPLICATE);
+        }
 
         lecture.update(
                 reqDto.getTitle(),

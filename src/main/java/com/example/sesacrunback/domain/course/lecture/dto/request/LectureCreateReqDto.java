@@ -25,6 +25,8 @@ public class LectureCreateReqDto {
     @Size(max = 500)
     private final String videoUrl;
 
+    @NotNull(message = "영상 길이는 필수입니다.")
+    @jakarta.validation.constraints.Min(value = 1, message = "영상 길이는 1초 이상이어야 합니다.")
     private final Integer duration;
 
     private final Boolean isFree;

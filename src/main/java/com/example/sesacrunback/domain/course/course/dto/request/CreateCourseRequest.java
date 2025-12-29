@@ -106,16 +106,14 @@ public class CreateCourseRequest {
         @NotBlank(message = "영상 URL은 필수입니다")
         private String videoUrl;
 
+        @NotNull(message = "영상 길이는 필수입니다")
+        @Min(value = 1, message = "영상 길이는 1초 이상이어야 합니다")
         private Integer duration;
 
         @NotNull(message = "강의 순서는 필수입니다")
         private Integer order;
 
         private Boolean isFree;
-
-        private int durationOrZero() {
-            return duration != null ? duration : 0;
-        }
 
         private boolean freeOrFalse() {
             return Boolean.TRUE.equals(isFree);
@@ -127,7 +125,7 @@ public class CreateCourseRequest {
                 title,
                 order,
                 videoUrl,
-                durationOrZero(),
+                duration,
                 freeOrFalse()
             );
 

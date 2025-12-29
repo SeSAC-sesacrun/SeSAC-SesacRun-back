@@ -55,7 +55,7 @@ public class Lecture extends BaseTimeEntity {
                 .title(title)
                 .order(order)
                 .videoUrl(videoUrl)
-                .duration(duration != null ? duration : 0)
+                .duration(duration)
                 .isFree(isFree != null ? isFree : false)
                 .build();
     }
@@ -66,7 +66,7 @@ public class Lecture extends BaseTimeEntity {
         this.title = title;
         this.order = order;
         this.videoUrl = videoUrl;
-        this.duration = duration != null ? duration : 0;
+        this.duration = duration;
         this.isFree = isFree != null ? isFree : false;
     }
 }

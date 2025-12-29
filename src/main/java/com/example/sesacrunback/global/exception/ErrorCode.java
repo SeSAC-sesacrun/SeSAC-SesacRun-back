@@ -32,9 +32,11 @@ public enum ErrorCode {
 
     // Section
     SECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "섹션을 찾을 수 없습니다."),
+    SECTION_ORDER_DUPLICATE(HttpStatus.CONFLICT, "해당 순서에 이미 다른 섹션이 존재합니다."),
 
     // Lecture
     LECTURE_NOT_FOUND(HttpStatus.NOT_FOUND, "강의를 찾을 수 없습니다."),
+    LECTURE_ORDER_DUPLICATE(HttpStatus.CONFLICT, "해당 순서에 이미 다른 강의가 존재합니다."),
 
     // Cart
     CART_ITEM_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 장바구니에 담긴 강의입니다."),
