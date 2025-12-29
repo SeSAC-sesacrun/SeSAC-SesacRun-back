@@ -2,21 +2,27 @@ package com.example.sesacrunback.domain.user.service;
 
 import com.example.sesacrunback.domain.user.dto.request.LoginReqDto;
 import com.example.sesacrunback.domain.user.dto.request.SignUpReqDto;
+import com.example.sesacrunback.domain.user.dto.response.LoginResDto;
 import com.example.sesacrunback.domain.user.dto.response.UserResDto;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
+import com.example.sesacrunback.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserService {
+public class AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+
 
     @Transactional
     public UserResDto signUp(SignUpReqDto signUpReqDto) {
@@ -25,39 +31,33 @@ public class UserService {
             throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
-        // DTO를 UserEntity로 변환
-        User user = SignUpReqDto.toEntity(signUpReqDto);
 
-        // 비밀번호 암호화
-        // 비밀번호 암호화 부분은 security를 넣으면서 추가 예정
-
-        User saved = userRepository.save(user);
+        // 비밀번호 암호화 , DTO를 UserEntity로 변환
+        User saved = userRepository.save(signUpReqDto.toEntity(passwordEncoder.encode(signUpReqDto.getPassword())));
 
 
         return UserResDto.from(saved);
     }
 
-    public UserResDto login(LoginReqDto loginReqDto) {
+    public LoginResDto login(LoginReqDto loginReqDto) {
 
         // 입력한 이메일이 데이터 베이스에 존재하는지 여부
         User user = userRepository.findByEmail(loginReqDto.getEmail())
-                        .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         // 입력한 비밀번호가 불러온 user의 password와 일치하는지여부
         // 시큐리티 도입이후 변경상황을 고려해서 코드 작성 필요
-        if (!user.getPassword().equals(loginReqDto.getPassword())){
+        if (!passwordEncoder.matches(loginReqDto.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.LOGIN_FAILED);
         }
 
         // 해당 유저의 토큰 발급
+        String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
+        // String refreshToken = jwtProvider.createRefreshToken(user.getEmail());
 
-        // 로컬에 리프레스토큰 저장 필요?
-
-        // 토큰을 포함한 UserResDto 로 변환 필요
-
-        return UserResDto.from(user);
-
-
+        return LoginResDto.of(accessToken , user.getRole());
 
     }
+    
+    
 }
