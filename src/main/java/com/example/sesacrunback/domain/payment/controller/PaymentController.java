@@ -22,7 +22,7 @@ public class PaymentController {
             // @AuthenticationPrincipal CustomUserDetails userDetails
             @RequestHeader("X-USER-ID") Long userId // @AuthenticationPrincipal 대신 @RequestHeader 사용   // TODO : user 생성 후 변경
 
-    ) throws IOException {
+    ) {
         // Long userId = userDetails.getUser().getId(); // TODO : 실제 userId 가져오기
 
         PaymentResponse response = paymentService.complete(request, userId);

@@ -38,6 +38,7 @@ public enum ErrorCode {
     // PAYMENT
     PAYMENT_AMOUNT_MISMATCH(HttpStatus.BAD_REQUEST, "주문 금액과 실결제 금액이 일치하지 않습니다."),
     PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "결제내역이 없습니다."),
+    JSON_SERIALIZATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "데이터를 JSON으로 변환하는 데 실패했습니다."),
     PAYMENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 결제한 강의입니다.");
 
 

@@ -32,7 +32,7 @@ public class PaymentService {
     private final CartRepository cartRepository;
 
     @Transactional
-    public PaymentResponse complete(PaymentCreateRequest request, Long userId) throws IOException {
+    public PaymentResponse complete(PaymentCreateRequest request, Long userId) {
         // 1. 사용자 정보 조회
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -61,13 +61,20 @@ public class PaymentService {
         // 5. Order 엔티티 생성 (OrderItem 포함)
         Order order = Order.createOrder(user, cartItems, request.getMerchantUid());
 
+        String portoneDataJson;
+        try {
+            portoneDataJson = objectMapper.writeValueAsString(request);
+        } catch (IOException e) {
+            throw new CustomException(ErrorCode.JSON_SERIALIZATION_FAILED);
+        }
+
         // 6. Payment 엔티티 생성
         Payment payment = Payment.builder()
                 .portonePaymentId(request.getImpUid())
                 .order(order)
                 .amount(request.getPaidAmount())
                 .status(PaymentStatus.fromStatusString(request.getStatus()))
-                .portoneData(objectMapper.writeValueAsString(request))
+                .portoneData(portoneDataJson)
                 .build();
 
         // 7. Order 및 Payment 저장 (Order에 Cascade 설정으로 OrderItem도 함께 저장됨)
