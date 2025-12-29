@@ -44,7 +44,7 @@ public class AuthController {
         LoginResDto resDto = authService.login(loginReqDto);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getAccessToken());
-        headers.set("Refresh-Token", resDto.getRefreshToken());
+        // headers.set("Refresh-Token", resDto.getRefreshToken());
 
         return ResponseEntity.ok().headers(headers).body(ApiResponse.success(resDto.getRole()));
     }

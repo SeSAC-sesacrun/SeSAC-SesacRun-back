@@ -9,10 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LoginResDto {
     private String accessToken;
-    private String refreshToken;
+    // private String refreshToken;
     private UserRole role;
 
-    public static LoginResDto of(String accessToken , String refreshToken, UserRole role){
-        return new LoginResDto(accessToken , refreshToken, role);
+    public static LoginResDto of(String accessToken , UserRole role){
+        return new LoginResDto(accessToken , role);
     }
 }

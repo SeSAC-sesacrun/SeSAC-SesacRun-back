@@ -53,9 +53,9 @@ public class AuthService {
 
         // 해당 유저의 토큰 발급
         String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
-        String refreshToken = jwtProvider.createRefreshToken(user.getEmail());
+        // String refreshToken = jwtProvider.createRefreshToken(user.getEmail());
 
-        return LoginResDto.of(accessToken , refreshToken , user.getRole());
+        return LoginResDto.of(accessToken , user.getRole());
 
     }
     
