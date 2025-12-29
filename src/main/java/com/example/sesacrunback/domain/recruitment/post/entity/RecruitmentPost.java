@@ -98,6 +98,7 @@ public class RecruitmentPost extends BaseTimeEntity {
         this.totalMembers = totalMembers;
     }
 
+    // todo 예외를 여기서 던질지 고민
     public boolean isPostOwner(Long userId) {
         return this.author.getId().equals(userId);
     }
@@ -106,6 +107,17 @@ public class RecruitmentPost extends BaseTimeEntity {
         // 현재 참여 인원보다 적으면 불가
         if (newTotalMembers < this.currentMembers) {
             throw new CustomException(ErrorCode.POST_INVALID_TOTAL_MEMBERS);
+        }
+    }
+
+    public void increaseCurrentCount() {
+        validateCapacity();
+        currentMembers++;
+    }
+
+    public void validateCapacity() {
+        if (currentMembers >= totalMembers) {
+            throw new CustomException(ErrorCode.RECRUITMENT_FULL);
         }
     }
 }
