@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/courses/my").hasRole("INSTRUCTOR") // 조회: 강사
                         .requestMatchers(HttpMethod.POST,"/api/courses").hasRole("INSTRUCTOR") // 작성: 강사
                         .requestMatchers(HttpMethod.DELETE,"/api/courses/**").hasRole("INSTRUCTOR") // 삭제: 강사
+                        .requestMatchers(HttpMethod.GET, "/api/courses/*/watch").authenticated() // Watch: 로그인 필요 (구매 권한은 Service에서 체크)
                         .requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll() // 조회: 누구나
                         
                         // 커뮤니티
@@ -51,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/recruitments/posts/**").authenticated()  // 삭제: 로그인 필요
                         
                         // 장바구니
-                        .requestMatchers("/api/cart/**").authenticated() //장바구니 모든 요청 : 로그인 필요
+                        .requestMatchers("/api/carts/**").authenticated() //장바구니 모든 요청 : 로그인 필요
 
                         .anyRequest().authenticated()
         

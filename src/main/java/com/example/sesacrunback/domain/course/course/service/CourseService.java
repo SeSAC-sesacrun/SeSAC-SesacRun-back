@@ -4,8 +4,11 @@ import com.example.sesacrunback.domain.course.course.dto.request.CourseUpdateReq
 import com.example.sesacrunback.domain.course.course.dto.request.CreateCourseRequest;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseDetailResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
+import com.example.sesacrunback.domain.course.course.dto.response.CourseViewContext;
+import com.example.sesacrunback.domain.course.course.dto.response.CourseWatchResponse;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.course.course.repository.CourseRepository;
+import com.example.sesacrunback.domain.order.repository.OrderRepository;
 import com.example.sesacrunback.domain.course.lecture.entity.Lecture;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.exception.CustomException;
@@ -31,22 +34,14 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final EntityManager entityManager;
-
-    /**
-     * 현재 로그인한 사용자 ID 반환 (더미)
-     */
-    private Long getCurrentUserId() {
-        return 1L; // 임시 강의자 ID
-    }
+    private final OrderRepository orderRepository;
 
     /**
      * 강의 생성 (Phase 1: 생성 즉시 게시)
      */
     @Transactional
-    public CourseResponse createCourse(CreateCourseRequest request) {
+    public CourseResponse createCourse(CreateCourseRequest request, Long instructorId) {
         log.info("Creating new course: {}", request.getTitle());
-
-        Long instructorId = getCurrentUserId();
 
         // User 프록시 생성 (실제 DB 조회 없이 참조만 생성)
         User instructor = entityManager.getReference(User.class, instructorId);
@@ -57,14 +52,41 @@ public class CourseService {
         return CourseResponse.from(courseRepository.save(course));
     }
 
-    public CourseDetailResponse getCourseDetail(Long courseId) {
+    /**
+     * 상세 페이지 (미리보기 + 버튼 분기)
+     */
+    public CourseDetailResponse getCourseDetail(Long courseId, Long userId) {
         log.info("Getting course detail for ID: {}", courseId);
 
         // sections 조회 (lectures는 @BatchSize로 자동 로딩)
         Course course = courseRepository.findDetailWithSections(courseId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
-        return CourseDetailResponse.from(course);
+        boolean isInstructor = userId != null && course.isOwner(userId);
+        boolean canWatch = userId != null &&
+                (isInstructor ||
+                 orderRepository.hasCompletedOrderForCourse(userId, courseId));
+
+        CourseViewContext ctx = new CourseViewContext(isInstructor);
+
+        return CourseDetailResponse.from(course, ctx, canWatch);
+    }
+
+    /**
+     * Watch 페이지 (강사 or 구매자만 전체 시청)
+     */
+    public CourseWatchResponse getCourseForWatch(Long courseId, Long userId) {
+        log.info("Getting course for watch - courseId: {}, userId: {}", courseId, userId);
+
+        Course course = courseRepository.findDetailWithSections(courseId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+        if (!course.isOwner(userId)
+                && !orderRepository.hasCompletedOrderForCourse(userId, courseId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
+        return CourseWatchResponse.from(course);
     }
 
     /**
@@ -118,8 +140,7 @@ public class CourseService {
     /**
      * 강사의 강의 목록 조회 (페이징)
      */
-    public Page<CourseResponse> getMyCourses(Pageable pageable) {
-        Long instructorId = getCurrentUserId();
+    public Page<CourseResponse> getMyCourses(Pageable pageable, Long instructorId) {
         log.info("Getting courses for instructor ID: {}", instructorId);
 
         return courseRepository.findByInstructor_Id(instructorId, pageable)
@@ -130,12 +151,11 @@ public class CourseService {
      * 강의 수정
      */
     @Transactional
-    public Long updateCourse(Long courseId, CourseUpdateReqDto reqDto) {
+    public Long updateCourse(Long courseId, CourseUpdateReqDto reqDto, Long userId) {
         log.info("Updating course with ID: {}", courseId);
 
         Course course = getCourseById(courseId);
-        Long currentUserId = getCurrentUserId();
-        validateCourseOwner(course, currentUserId);
+        validateCourseOwner(course, userId);
 
         course.updateCourse(
                 reqDto.getTitle(),
@@ -154,12 +174,11 @@ public class CourseService {
      * 강의 삭제
      */
     @Transactional
-    public void deleteCourse(Long courseId) {
+    public void deleteCourse(Long courseId, Long userId) {
         log.info("Deleting course with ID: {}", courseId);
 
         Course course = getCourseById(courseId);
-        Long currentUserId = getCurrentUserId();
-        validateCourseOwner(course, currentUserId);
+        validateCourseOwner(course, userId);
 
         courseRepository.delete(course);
     }

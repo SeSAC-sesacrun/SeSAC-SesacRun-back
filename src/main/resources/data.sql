@@ -26,10 +26,10 @@ INSERT INTO sections (title, section_order, course_id, created_at, updated_at) V
 
 -- Lectures
 INSERT INTO lectures (title, video_url, duration, is_free, lecture_order, section_id, created_at, updated_at) VALUES
-('변수와 자료형', 'https://youtu.be/example1', 600, true, 1, 1, NOW(), NOW()),
-('연산자', 'https://youtu.be/example2', 900, false, 2, 1, NOW(), NOW()),
-('클래스와 객체', 'https://youtu.be/example3', 1200, false, 1, 2, NOW(), NOW()),
-('스프링 프로젝트 생성', 'https://youtu.be/example4', 720, true, 1, 3, NOW(), NOW());
+('변수와 자료형', 'https://www.youtube.com/watch?v=yZ89etxVBKs', 600, true, 1, 1, NOW(), NOW()),
+('연산자', 'https://www.youtube.com/watch?v=yZ89etxVBKs', 900, false, 2, 1, NOW(), NOW()),
+('클래스와 객체', 'https://www.youtube.com/watch?v=yZ89etxVBKs', 1200, false, 1, 2, NOW(), NOW()),
+('스프링 프로젝트 생성', 'https://www.youtube.com/watch?v=yZ89etxVBKs', 720, true, 1, 3, NOW(), NOW());
 
 -- Recruitment Posts
 INSERT INTO recruitment_posts (category, status, title, content, current_members, total_members, views, author_id, created_at, updated_at) VALUES
@@ -70,3 +70,36 @@ INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, 
 -- Cart Items
 INSERT INTO cart_items (user_id, course_id, created_at) VALUES
 (3, 2, NOW());
+
+-- ✅ COMPLETED Order (이학생이 자바 완전 정복 구매 완료)
+
+INSERT INTO orders (
+    order_number,
+    total_amount,
+    status,
+    user_id,
+    created_at,
+    updated_at
+) VALUES (
+             'ORD-20231222-0002',
+             50000,
+             'COMPLETED',
+             2,
+             NOW(),
+             NOW()
+         );
+
+-- 해당 주문에 포함된 강의 (자바 완전 정복)
+INSERT INTO order_items (
+    course_name,
+    price,
+    order_id,
+    course_id,
+    created_at
+) VALUES (
+             '자바 완전 정복',
+             50000,
+             LAST_INSERT_ID(),
+             1,
+             NOW()
+         );
