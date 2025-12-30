@@ -47,7 +47,7 @@ public class RecruitmentMemberService {
         // 이미 존재한다면 신청 검증
         if (optionalMember.isPresent()) {
             RecruitmentMember member = optionalMember.get();
-            member.validateCanApply();
+            member.reapply();
             return post.getId();
         }
 

@@ -66,7 +66,7 @@ public class RecruitmentMember extends BaseTimeEntity { //todo 추후 패키지,
             .build();
     }
 
-    public void validateCanApply() {
+    public void reapply() {
 
         switch (status) {
             case PENDING -> throw new CustomException(ErrorCode.ALREADY_APPLIED);
