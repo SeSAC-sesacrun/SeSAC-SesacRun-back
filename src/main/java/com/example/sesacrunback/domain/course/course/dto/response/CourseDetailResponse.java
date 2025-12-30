@@ -24,6 +24,10 @@ public class CourseDetailResponse {
     private final Integer studentCount;
     private final List<String> features;
     private final CourseStatus status;
+
+    /** 버튼 분기용 */
+    private final boolean canWatch;
+
     private final List<SectionResponse> sections;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
@@ -41,8 +45,35 @@ public class CourseDetailResponse {
                 course.getStudentCount(),
                 course.getFeatures(),
                 course.getStatus(),
+                false,
                 course.getSections().stream()
                         .map(SectionResponse::from)
+                        .collect(Collectors.toList()),
+                course.getCreatedAt(),
+                course.getUpdatedAt()
+        );
+    }
+
+    public static CourseDetailResponse from(
+            Course course,
+            CourseViewContext ctx,
+            boolean canWatch
+    ) {
+        return new CourseDetailResponse(
+                course.getId(),
+                course.getInstructorId(),
+                course.getTitle(),
+                course.getDescription(),
+                course.getDetailedDescription(),
+                course.getThumbnail(),
+                course.getCategory(),
+                course.getPrice(),
+                course.getStudentCount(),
+                course.getFeatures(),
+                course.getStatus(),
+                canWatch,
+                course.getSections().stream()
+                        .map(s -> SectionResponse.from(s, ctx))
                         .collect(Collectors.toList()),
                 course.getCreatedAt(),
                 course.getUpdatedAt()

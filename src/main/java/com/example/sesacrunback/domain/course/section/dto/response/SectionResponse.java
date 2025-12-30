@@ -1,5 +1,6 @@
 package com.example.sesacrunback.domain.course.section.dto.response;
 
+import com.example.sesacrunback.domain.course.course.dto.response.CourseViewContext;
 import com.example.sesacrunback.domain.course.lecture.dto.response.LectureResponse;
 import com.example.sesacrunback.domain.course.section.entity.Section;
 import lombok.Getter;
@@ -28,6 +29,17 @@ public class SectionResponse {
                 section.getOrder(),
                 section.getLectures().stream()
                         .map(LectureResponse::from)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public static SectionResponse from(Section section, CourseViewContext ctx) {
+        return new SectionResponse(
+                section.getId(),
+                section.getTitle(),
+                section.getOrder(),
+                section.getLectures().stream()
+                        .map(l -> LectureResponse.from(l, ctx))
                         .collect(Collectors.toList())
         );
     }

@@ -11,7 +11,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     /**
      * 유저가 해당 코스를 결제 완료(COMPLETED) 상태로 구매했는지 여부
      */
-    boolean existsByUserIdAndOrderItems_CourseIdAndStatus(
+    boolean existsByUserIdAndOrderItems_Course_IdAndStatus(
             Long userId,
             Long courseId,
             OrderState status
@@ -19,7 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     /** 수강 권한 판단 단일 진입점 */
     default boolean hasCompletedOrderForCourse(Long userId, Long courseId) {
-        return existsByUserIdAndOrderItems_CourseIdAndStatus(
+        return existsByUserIdAndOrderItems_Course_IdAndStatus(
                 userId,
                 courseId,
                 OrderState.COMPLETED
