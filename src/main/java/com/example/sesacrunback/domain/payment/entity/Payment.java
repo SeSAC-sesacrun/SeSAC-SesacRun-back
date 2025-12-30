@@ -3,21 +3,12 @@ package com.example.sesacrunback.domain.payment.entity;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.refund.entity.Refund;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,7 +22,7 @@ public class Payment extends BaseTimeEntity {
     private Long id; // PK
 
     @Column(nullable = false, unique = true)
-    private String portonePaymentId; // 포트원 결제 ID
+    private String portonePaymentId; // PortOne의 imp_uid
 
     @Column(nullable = false)
     private int amount; // 결제 금액
@@ -40,6 +31,8 @@ public class Payment extends BaseTimeEntity {
     @Column(nullable = false)
     private PaymentStatus status; // 결제 상태
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String portoneData; // 포트원 결제 데이터 (JSON)
 
     @OneToOne
@@ -48,4 +41,14 @@ public class Payment extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
     private List<Refund> refunds = new ArrayList<>(); // 이 결제와 관련된 환불 목록
+
+    @Builder
+    private Payment(String portonePaymentId, int amount, PaymentStatus status, String portoneData, Order order) {
+        this.portonePaymentId = portonePaymentId;
+        this.amount = amount;
+        this.status = status;
+        this.portoneData = portoneData;
+        this.order = order;
+    }
+
 }

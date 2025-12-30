@@ -1,5 +1,6 @@
 package com.example.sesacrunback.domain.order.entity;
 
+import com.example.sesacrunback.domain.cart.entity.CartItem;
 import com.example.sesacrunback.domain.orderItem.entity.OrderItem;
 import com.example.sesacrunback.domain.payment.entity.Payment;
 import com.example.sesacrunback.domain.user.entity.User;
@@ -19,7 +20,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -42,7 +47,6 @@ public class Order extends BaseTimeEntity {
     @Column(nullable = false)
     private OrderState status; // 주문 상태
 
-
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
     private User user; // 주문한 사용자
@@ -52,4 +56,37 @@ public class Order extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "order")
     private Payment payment; // 주문에 대한 결제 정보
+
+    @Builder
+    public Order(String orderNumber, User user, Integer totalAmount, OrderState status) {
+        this.orderNumber = orderNumber;
+        this.user = user;
+        this.totalAmount = totalAmount;
+        this.status = status;
+    }
+
+    public static Order createOrder(User user, List<CartItem> cartItems, String merchantUid) {
+        Order order = Order.builder()
+                .user(user)
+                .orderNumber(merchantUid)
+                .totalAmount(
+                        cartItems.stream()
+                                .mapToInt(item -> item.getCourse().getPrice())
+                                .sum()
+                )
+                .status(OrderState.CREATED)
+                .build();
+
+        List<OrderItem> orderItems = cartItems.stream()
+                .map(cartItem -> OrderItem.fromCartItem(cartItem, order))
+                .collect(Collectors.toList());
+
+        order.orderItems.addAll(orderItems);
+        return order;
+    }
+
+    // 결제 완료 시 주문 상태 변경
+    public void completePayment() {
+        this.status = OrderState.COMPLETED;
+    }
 }
