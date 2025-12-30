@@ -69,11 +69,12 @@ public class CourseService {
 
     /**
      * 전체 강의 목록 조회 (페이징)
+     * - Section과 Lecture가 1개 이상 있는 강의만 반환
      */
     public Page<CourseResponse> getAllCourses(Pageable pageable) {
-        log.info("Getting all courses");
+        log.info("Getting all courses with content");
 
-        return courseRepository.findAll(pageable)
+        return courseRepository.findAllWithContent(pageable)
                 .map(CourseResponse::from);
     }
 

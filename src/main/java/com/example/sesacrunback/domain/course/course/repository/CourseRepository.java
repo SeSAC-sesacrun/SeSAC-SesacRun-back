@@ -37,9 +37,19 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
      * =============================== */
 
     /**
-     * 전체 강의 목록 (Paging)
-     * - JpaRepository의 findAll(Pageable)을 그대로 사용
+     * Section과 Lecture가 1개 이상 있는 강의만 조회
+     * - JOIN을 통해 실제 콘텐츠가 있는 강의만 필터링
+     * - DISTINCT로 중복 제거 (Section × Lecture 조합으로 row 증가 방지)
+     * - fetch join 사용 X (Pageable과 함께 사용 시 페이징 깨짐)
      */
+    @Query("""
+        SELECT DISTINCT c
+        FROM Course c
+        JOIN c.sections s
+        JOIN s.lectures l
+        WHERE c.status = 'PUBLISHED'
+    """)
+    Page<Course> findAllWithContent(Pageable pageable);
 
     /**
      * 카테고리별 강의 목록

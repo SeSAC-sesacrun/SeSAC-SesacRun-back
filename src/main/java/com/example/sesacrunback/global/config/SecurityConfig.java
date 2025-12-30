@@ -38,11 +38,11 @@ public class SecurityConfig {
                        .requestMatchers("/api/auth/me").authenticated()// 회원가입, 로그인 : 누구나
                        .requestMatchers("/api/auth/**").permitAll()// 회원가입, 로그인 : 누구나
 
-                        // 강의                       
-                        .requestMatchers(HttpMethod.GET, "/api/v1/courses/my").hasRole("INSTRUCTOR") // 조회: 강사
-                        .requestMatchers(HttpMethod.POST,"/api/v1/courses").hasRole("INSTRUCTOR") // 작성: 강사
-                        .requestMatchers(HttpMethod.DELETE,"/api/v1/courses/**").hasRole("INSTRUCTOR") // 삭제: 강사
-                        .requestMatchers(HttpMethod.GET, "/api/v1/courses/**").permitAll() // 조회: 누구나
+                        // 강의
+                        .requestMatchers(HttpMethod.GET, "/api/courses/my").hasRole("INSTRUCTOR") // 조회: 강사
+                        .requestMatchers(HttpMethod.POST,"/api/courses").hasRole("INSTRUCTOR") // 작성: 강사
+                        .requestMatchers(HttpMethod.DELETE,"/api/courses/**").hasRole("INSTRUCTOR") // 삭제: 강사
+                        .requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll() // 조회: 누구나
                         
                         // 커뮤니티
                         .requestMatchers(HttpMethod.GET, "/api/recruitments/posts/**").permitAll()  // 조회: 누구나
