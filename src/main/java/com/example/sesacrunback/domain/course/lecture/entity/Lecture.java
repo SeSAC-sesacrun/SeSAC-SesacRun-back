@@ -3,14 +3,18 @@ package com.example.sesacrunback.domain.course.lecture.entity;
 import com.example.sesacrunback.domain.course.section.entity.Section;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "lectures")
 @Getter
+@Table(name = "lectures")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class Lecture extends BaseTimeEntity {
 
     @Id
@@ -25,44 +29,44 @@ public class Lecture extends BaseTimeEntity {
     private String title;
 
     @Column(nullable = false)
-    @Builder.Default
-    private Integer duration = 0; // 영상 길이 (초)
+    private Integer duration; // 영상 길이 (초)
 
     @Column(nullable = false, name = "lecture_order")
     private Integer order;
 
     @Column(nullable = false, length = 500)
-    private String videoUrl; // YouTube URL
+    private String videoUrl; // YouTube / S3 URL
 
     @Column(nullable = false)
-    @Builder.Default
-    private Boolean isFree = false;
+    private Boolean isFree;
 
-    /**
-     * 비즈니스 로직
-     */
-    public void updateLectureInfo(String title, Integer duration, String videoUrl, Boolean isFree) {
-        if (title != null && !title.isBlank()) {
-            this.title = title;
-        }
-        if (duration != null) {
-            this.duration = duration;
-        }
-        if (videoUrl != null && !videoUrl.isBlank()) {
-            this.videoUrl = videoUrl;
-        }
-        if (isFree != null) {
-            this.isFree = isFree;
-        }
+    /* ========= 생성 책임 ========= */
+
+    public static Lecture of(
+            Section section,
+            String title,
+            Integer order,
+            String videoUrl,
+            Integer duration,
+            Boolean isFree
+    ) {
+        return Lecture.builder()
+                .section(section)
+                .title(title)
+                .order(order)
+                .videoUrl(videoUrl)
+                .duration(duration)
+                .isFree(isFree != null ? isFree : false)
+                .build();
     }
 
-    public void updateOrder(Integer order) {
-        if (order != null) {
-            this.order = order;
-        }
-    }
+    /* ========= 비즈니스 로직 ========= */
 
-    public void setSection(Section section) {
-        this.section = section;
+    public void update(String title, Integer order, String videoUrl, Integer duration, Boolean isFree) {
+        this.title = title;
+        this.order = order;
+        this.videoUrl = videoUrl;
+        this.duration = duration;
+        this.isFree = isFree != null ? isFree : false;
     }
 }

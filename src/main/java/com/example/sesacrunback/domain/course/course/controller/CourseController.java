@@ -1,5 +1,6 @@
 package com.example.sesacrunback.domain.course.course.controller;
 
+import com.example.sesacrunback.domain.course.course.dto.request.CourseUpdateReqDto;
 import com.example.sesacrunback.domain.course.course.dto.request.CreateCourseRequest;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseDetailResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
@@ -16,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/courses")
+@RequestMapping("/api/courses")
 @RequiredArgsConstructor
 public class CourseController {
 
@@ -74,6 +75,15 @@ public class CourseController {
             @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<CourseResponse> courses = courseService.getMyCourses(pageable);
         return ResponseEntity.ok(ApiResponse.success(courses));
+    }
+
+    @PutMapping("/{courseId}")
+    // @PreAuthorize("hasRole('INSTRUCTOR')") // 인증 시스템 협업 중이므로 주석 처리
+    public ResponseEntity<ApiResponse<Long>> updateCourse(
+            @PathVariable Long courseId,
+            @Valid @RequestBody CourseUpdateReqDto request) {
+        Long updatedCourseId = courseService.updateCourse(courseId, request);
+        return ResponseEntity.ok(ApiResponse.success(updatedCourseId));
     }
 
     @DeleteMapping("/{courseId}")
