@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PostDetailResDto {
+public class PostDetailResDto { //Todo 작성자 Id 반환 필요
 
     private final Long postId;
 

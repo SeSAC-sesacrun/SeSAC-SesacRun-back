@@ -30,3 +30,6 @@ spring:
 portone:
   apiKey: ${PORTONE_APIKEY}
   apiSecret: ${PORTONE_SECRET}
+  
+  jwt:
+    secret: ${JWT_SECRET}

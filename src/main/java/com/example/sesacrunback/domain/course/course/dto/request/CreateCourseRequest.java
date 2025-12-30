@@ -106,6 +106,8 @@ public class CreateCourseRequest {
         @NotBlank(message = "영상 URL은 필수입니다")
         private String videoUrl;
 
+        @NotNull(message = "영상 길이는 필수입니다")
+        @Min(value = 1, message = "영상 길이는 1초 이상이어야 합니다")
         private Integer duration;
 
         @NotNull(message = "강의 순서는 필수입니다")
@@ -113,23 +115,19 @@ public class CreateCourseRequest {
 
         private Boolean isFree;
 
-        private int durationOrZero() {
-            return duration != null ? duration : 0;
-        }
-
         private boolean freeOrFalse() {
             return Boolean.TRUE.equals(isFree);
         }
 
         public Lecture toEntity(Section section) {
-            Lecture lecture = Lecture.builder()
-                .section(section)
-                .title(title)
-                .videoUrl(videoUrl)
-                .duration(durationOrZero())
-                .order(order)
-                .isFree(freeOrFalse())
-                .build();
+            Lecture lecture = Lecture.of(
+                section,
+                title,
+                order,
+                videoUrl,
+                duration,
+                freeOrFalse()
+            );
 
             section.addLecture(lecture);
             return lecture;
