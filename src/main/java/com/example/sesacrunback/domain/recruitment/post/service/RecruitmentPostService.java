@@ -30,9 +30,8 @@ public class RecruitmentPostService {
     @Transactional
     public Long createPost(RecruitmentPostCreateReqDto reqDto, Long userId) {
 
-        // Todo userService 완료 후 변경 예정
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+            .orElseThrow(() ->  new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         RecruitmentPost post = recruitmentPostRepository.save(reqDto.toEntity(user));
 
