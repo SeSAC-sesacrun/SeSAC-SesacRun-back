@@ -62,10 +62,10 @@ public class CourseService {
         Course course = courseRepository.findDetailWithSections(courseId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
-        boolean isInstructor = userId != null && course.isOwner(userId);
-        boolean canWatch = userId != null &&
-                (isInstructor ||
-                 orderRepository.hasCompletedOrderForCourse(userId, courseId));
+        final boolean isUserLoggedIn = userId != null;
+        final boolean isInstructor = isUserLoggedIn && course.isOwner(userId);
+        final boolean hasPurchased = isUserLoggedIn && orderRepository.hasCompletedOrderForCourse(userId, courseId);
+        final boolean canWatch = isInstructor || hasPurchased;
 
         CourseViewContext ctx = new CourseViewContext(isInstructor);
 
