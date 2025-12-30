@@ -31,7 +31,7 @@ public class RecruitmentPostService {
     public Long createPost(RecruitmentPostCreateReqDto reqDto, Long userId) {
 
         User user = userRepository.findById(userId)
-            .orElseThrow(() ->  new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         RecruitmentPost post = recruitmentPostRepository.save(reqDto.toEntity(user));
 
@@ -42,19 +42,21 @@ public class RecruitmentPostService {
     }
 
     @Transactional
-    public PostDetailResDto viewPost(Long postId) {
+    public PostDetailResDto viewPost(Long postId, Long userId) {
         RecruitmentPost post = getPostById(postId);
         // 조회 수 증가
         post.increaseViewCount();
 
-        return PostDetailResDto.from(post);
+        return PostDetailResDto.from(post, userId != null && post.isPostOwner(userId));
     }
 
     public Slice<PostDetailResDto> viewPosts(RecruitmentCategory category, RecruitmentStatus status,
-        Pageable pageable) {
+        Pageable pageable, Long userId) {
         Slice<RecruitmentPost> posts = recruitmentPostRepository.findPosts(category, status,
             pageable);
-        return posts.map(PostDetailResDto::from);
+
+        return posts.map(
+            post -> PostDetailResDto.from(post, userId != null && post.isPostOwner(userId)));
     }
 
     @Transactional
