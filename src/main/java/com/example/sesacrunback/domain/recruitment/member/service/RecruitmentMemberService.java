@@ -10,6 +10,7 @@ import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +41,15 @@ public class RecruitmentMemberService {
         User user = getUserById(userId);
 
         // 이미 신청 여부 검증
-        recruitmentMemberRepository.findTopByPostAndUserOrderByCreatedAtDesc(post, user)
-            .ifPresent(RecruitmentMember::validateCanApply);
+        Optional<RecruitmentMember> optionalMember = recruitmentMemberRepository.findByPostAndUser(
+            post, user);
+
+        // 이미 존재한다면 신청 검증
+        if (optionalMember.isPresent()) {
+            RecruitmentMember member = optionalMember.get();
+            member.validateCanApply();
+            return post.getId();
+        }
 
         // 정원 초과 검증
         post.validateCapacity();
