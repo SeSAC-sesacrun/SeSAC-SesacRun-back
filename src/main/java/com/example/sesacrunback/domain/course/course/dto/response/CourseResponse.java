@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class CourseResponse {
     private final Long id;
     private final Long instructorId;
+    private final String instructor;  // 강사 이름
     private final String title;
     private final String description;
     private final String thumbnail;
@@ -23,9 +24,20 @@ public class CourseResponse {
     private final LocalDateTime updatedAt;
 
     public static CourseResponse from(Course course) {
+        String instructorName = "강사";
+        try {
+            if (course.getInstructor() != null) {
+                instructorName = course.getInstructor().getName();
+            }
+        } catch (Exception e) {
+            // 프록시 초기화 실패 시 기본값 사용
+            instructorName = "강사";
+        }
+
         return new CourseResponse(
                 course.getId(),
                 course.getInstructorId(),
+                instructorName,
                 course.getTitle(),
                 course.getDescription(),
                 course.getThumbnail(),
