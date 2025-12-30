@@ -15,7 +15,10 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +47,7 @@ public class RecruitmentPostController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse<PostDetailResDto>> viewPost(@PathVariable Long postId) {
-        return ResponseEntity.ok(ApiResponse.success(recruitmentPostService.viewPost(postId)));
+        return ResponseEntity.ok(ApiResponse.success(recruitmentPostService.viewPost(postId, getLoginUserId())));
     }
 
     @GetMapping
@@ -54,7 +57,7 @@ public class RecruitmentPostController {
         @PageableDefault Pageable pageable) {
 
         return ResponseEntity.ok(
-            ApiResponse.success(recruitmentPostService.viewPosts(category, status, pageable)));
+            ApiResponse.success(recruitmentPostService.viewPosts(category, status, pageable, getLoginUserId())));
     }
 
     @PutMapping("/{postId}")
@@ -72,6 +75,15 @@ public class RecruitmentPostController {
         @AuthenticationPrincipal CustomUserDetails userDetails) {
         recruitmentPostService.deletePost(postId, userDetails.getId());
         return ResponseEntity.ok(ApiResponse.success("삭제되었습니다."));
+    }
+
+    private Long getLoginUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()
+            || auth instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        return ((CustomUserDetails) auth.getPrincipal()).getId();
     }
 
 }
