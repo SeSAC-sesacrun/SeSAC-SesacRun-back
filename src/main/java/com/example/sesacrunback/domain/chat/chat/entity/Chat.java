@@ -51,7 +51,7 @@ public class Chat extends BaseCreateEntity {
         this.participants.add(participant);
     }
 
-    public static Chat from(RecruitmentPost post, User host, User member) {
+    public static Chat of(RecruitmentPost post, User host, User member) {
         Chat chat = new Chat(post);
 
         chat.addParticipant(host, ChatRole.HOST);

@@ -35,7 +35,7 @@ public class ChatService {
         User currentUser = userRepository.findById(currentUserId)
             .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        User hostUser = post.getAuthor();
+        User hostUser = post.getAuthor(); // Todo n+1
 
         return chatRepository.findExistingChat(post.getId(), currentUser.getId(), hostUser.getId())
             .map(chat -> ChatRoomResDto.from(chat, post.getId(), hostUser))
@@ -43,7 +43,7 @@ public class ChatService {
     }
 
     private ChatRoomResDto createChatRoom(RecruitmentPost post, User currentUser, User hostUser) {
-        Chat chat = chatRepository.save(Chat.from(post, hostUser, currentUser));
+        Chat chat = chatRepository.save(Chat.of(post, hostUser, currentUser));
 
         return ChatRoomResDto.from(chat, post.getId(), hostUser);
     }
