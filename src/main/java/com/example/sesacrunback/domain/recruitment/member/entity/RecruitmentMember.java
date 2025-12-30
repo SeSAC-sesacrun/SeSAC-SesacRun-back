@@ -66,14 +66,16 @@ public class RecruitmentMember extends BaseTimeEntity { //todo 추후 패키지,
             .build();
     }
 
-    public void validateCanApply() {
-        if (status == MemberStatus.PENDING) {
-            throw new CustomException(ErrorCode.ALREADY_APPLIED);
+    public void reapply() {
+
+        switch (status) {
+            case PENDING -> throw new CustomException(ErrorCode.ALREADY_APPLIED);
+            case APPROVED -> throw new CustomException(ErrorCode.ALREADY_RECRUITED_MEMBER);
+            case REJECTED -> {
+                status = MemberStatus.PENDING;
+            }
         }
 
-        if (status == MemberStatus.APPROVED) {
-            throw new CustomException(ErrorCode.ALREADY_RECRUITED_MEMBER);
-        }
     }
 
     public boolean isOrganizer() {
