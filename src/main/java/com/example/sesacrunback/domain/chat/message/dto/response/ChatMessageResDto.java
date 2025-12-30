@@ -13,13 +13,13 @@ public class ChatMessageResDto {
     private final Long roomId;
     private final Long senderId;
     private final String senderName;
-    private final String content;
+    private final String message;
     private final LocalDateTime sendTime;
 
     public static ChatMessageResDto from(ChatMessage message) {
         return new ChatMessageResDto(message.getId(), message.getChat().getId(),
             message.getSender().getId(), message.getSender()
-            .getName(), message.getContent(), message.getCreatedAt());
+            .getName(), message.getMessage(), message.getCreatedAt());
     }
 
 }

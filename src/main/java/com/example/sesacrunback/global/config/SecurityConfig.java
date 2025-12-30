@@ -38,6 +38,9 @@ public class SecurityConfig {
                        .requestMatchers("/api/auth/me").authenticated()// 회원가입, 로그인 : 누구나
                        .requestMatchers("/api/auth/**").permitAll()// 회원가입, 로그인 : 누구나
 
+                        // 채팅
+                        .requestMatchers("/ws-stomp/**").permitAll()  // WebSocket 엔드포인트 허용
+
                         // 강의
                         .requestMatchers(HttpMethod.GET, "/api/courses/my").hasRole("INSTRUCTOR") // 조회: 강사
                         .requestMatchers(HttpMethod.POST,"/api/courses").hasRole("INSTRUCTOR") // 작성: 강사

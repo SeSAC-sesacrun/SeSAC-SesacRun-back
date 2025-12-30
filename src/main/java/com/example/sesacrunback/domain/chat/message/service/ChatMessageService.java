@@ -38,7 +38,7 @@ public class ChatMessageService {
             throw new CustomException(ErrorCode.CHAT_NOT_PARTICIPANT);
         }
 
-        ChatMessage chatMessage = ChatMessage.of(reqDto.getContent(), chat, sender);
+        ChatMessage chatMessage = ChatMessage.of(reqDto.getMessage(), chat, sender);
 
         return ChatMessageResDto.from(chatMessageRepository.save(chatMessage));
 
