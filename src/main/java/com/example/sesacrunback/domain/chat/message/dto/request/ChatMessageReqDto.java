@@ -8,5 +8,5 @@ import lombok.RequiredArgsConstructor;
 public class ChatMessageReqDto {
 
     private final Long roomId;
-    private final String content;
+    private final String message;
 }

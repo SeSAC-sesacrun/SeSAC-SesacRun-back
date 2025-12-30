@@ -19,7 +19,7 @@ public class ChatMessageResDto {
     public static ChatMessageResDto from(ChatMessage message) {
         return new ChatMessageResDto(message.getId(), message.getChat().getId(),
             message.getSender().getId(), message.getSender()
-            .getName(), message.getContent(), message.getCreatedAt());
+            .getName(), message.getMessage(), message.getCreatedAt());
     }
 
 }

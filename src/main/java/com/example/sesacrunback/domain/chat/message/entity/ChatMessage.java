@@ -31,7 +31,7 @@ public class ChatMessage extends BaseCreateEntity {
     private Long id; // PK
 
     @Column(nullable = false)
-    private String content; // 메시지 내용
+    private String message; // 메시지 내용
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id", nullable = false)
@@ -41,9 +41,9 @@ public class ChatMessage extends BaseCreateEntity {
     @JoinColumn(name = "sender_id", nullable = false)
     private User sender; // 발신자
 
-    public static ChatMessage of(String content, Chat chat, User sender) {
+    public static ChatMessage of(String message, Chat chat, User sender) {
         return ChatMessage.builder()
-            .content(content)
+            .message(message)
             .chat(chat)
             .sender(sender)
             .build();

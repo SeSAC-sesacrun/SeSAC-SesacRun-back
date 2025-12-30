@@ -52,7 +52,7 @@ VALUES (1, 2, 'HOST', NOW()), -- 모집자
 -- 참여자
 
 -- Chat Messages
-INSERT INTO chat_messages (content, chat_id, sender_id, created_at)
+INSERT INTO chat_messages (message, chat_id, sender_id, created_at)
 VALUES ('안녕하세요 스터디 참여하고 싶습니다.', 1, 3, NOW()),
        ('네 환영합니다!', 1, 2, NOW());
 -- Orders
