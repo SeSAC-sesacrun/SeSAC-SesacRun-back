@@ -42,14 +42,19 @@ INSERT INTO recruitment_members (role, status, post_id, user_id, created_at, upd
 ('PARTICIPANT', 'APPROVED', 1, 3, NOW(), NOW());
 
 -- Chat
-INSERT INTO chat (name, created_at) VALUES
-('자바 스터디 채팅방', NOW());
+INSERT INTO chat (post_id, name, created_at)
+VALUES (1, '자바 스터디 채팅방', NOW());
+
+-- Chat Participants
+INSERT INTO chat_participants (chat_id, user_id, role, created_at)
+VALUES (1, 2, 'HOST', NOW()), -- 모집자
+       (1, 3, 'MEMBER', NOW());
+-- 참여자
 
 -- Chat Messages
-INSERT INTO chat_messages (content, type, chat_id, sender_id, created_at) VALUES
-('안녕하세요 스터디 참여하고 싶습니다.', 'TEXT', 1, 3, NOW()),
-('네 환영합니다!', 'TEXT', 1, 2, NOW());
-
+INSERT INTO chat_messages (content, chat_id, sender_id, created_at)
+VALUES ('안녕하세요 스터디 참여하고 싶습니다.', 1, 3, NOW()),
+       ('네 환영합니다!', 1, 2, NOW());
 -- Orders
 INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at) VALUES
 ('ORD-20231222-0001', 50000, 'ORDER', 2, NOW(), NOW());
