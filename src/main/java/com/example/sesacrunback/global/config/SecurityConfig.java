@@ -56,7 +56,7 @@ public class SecurityConfig {
                         
                         // 장바구니
                         .requestMatchers("/api/carts/**").authenticated() //장바구니 모든 요청 : 로그인 필요
-
+                        .requestMatchers("/api/payments/**").authenticated() //결제 모든 요청 : 로그인 필요
                         .anyRequest().authenticated()
         
             )

@@ -6,8 +6,8 @@ INSERT INTO users (email, password, name, role, created_at, updated_at) VALUES
 
 -- Courses
 INSERT INTO courses (title, description, detailed_description, thumbnail, category, price, student_count, status, instructor_id, created_at, updated_at) VALUES
-('자바 완전 정복', '자바 기초부터 심화까지', '자바의 모든 것을 다룹니다. 변수, 연산자, 제어문부터 객체지향 프로그래밍까지 체계적으로 학습합니다.', 'https://example.com/java.png', 'Development', 50000, 0, 'PUBLISHED', 1, NOW(), NOW()),
-('스프링 부트 입문', '웹 개발의 시작 스프링 부트', '스프링 부트로 웹 서버를 만들어봅니다. REST API 설계와 데이터베이스 연동을 배웁니다.', 'https://example.com/spring.png', 'Web', 60000, 0, 'PUBLISHED', 1, NOW(), NOW());
+('자바 완전 정복', '자바 기초부터 심화까지', '자바의 모든 것을 다룹니다. 변수, 연산자, 제어문부터 객체지향 프로그래밍까지 체계적으로 학습합니다.', 'https://example.com/java.png', 'Development', 0, 0, 'PUBLISHED', 1, NOW(), NOW()),
+('스프링 부트 입문', '웹 개발의 시작 스프링 부트', '스프링 부트로 웹 서버를 만들어봅니다. REST API 설계와 데이터베이스 연동을 배웁니다.', 'https://example.com/spring.png', 'Web', 1000, 0, 'PUBLISHED', 1, NOW(), NOW());
 
 -- Course Features
 INSERT INTO course_features (course_id, feature) VALUES
@@ -56,50 +56,50 @@ INSERT INTO chat_messages (message, chat_id, sender_id, created_at)
 VALUES ('안녕하세요 스터디 참여하고 싶습니다.', 1, 3, NOW()),
        ('네 환영합니다!', 1, 2, NOW());
 -- Orders
-INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at) VALUES
-('ORD-20231222-0001', 50000, 'ORDER', 2, NOW(), NOW());
-
--- Order Items
-INSERT INTO order_items (course_name, price, order_id, course_id, created_at) VALUES
-('자바 완전 정복', 50000, 1, 1, NOW());
-
--- Payments
-INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at) VALUES
-('imp_1234567890', 50000, 'COMPLETED', 1, NOW(), NOW());
+-- INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at) VALUES
+-- ('ORD-20231222-0001', 50000, 'ORDER', 2, NOW(), NOW());
+--
+-- -- Order Items
+-- INSERT INTO order_items (course_name, price, order_id, course_id, created_at) VALUES
+-- ('자바 완전 정복', 50000, 1, 1, NOW());
+--
+-- -- Payments
+-- INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at) VALUES
+-- ('imp_1234567890', 50000, 'COMPLETED', 1, NOW(), NOW());
 
 -- Cart Items
-INSERT INTO cart_items (user_id, course_id, created_at) VALUES
-(3, 2, NOW());
+-- INSERT INTO cart_items (user_id, course_id, created_at) VALUES
+-- (3, 2, NOW());
 
 -- ✅ COMPLETED Order (이학생이 자바 완전 정복 구매 완료)
-
-INSERT INTO orders (
-    order_number,
-    total_amount,
-    status,
-    user_id,
-    created_at,
-    updated_at
-) VALUES (
-             'ORD-20231222-0002',
-             50000,
-             'COMPLETED',
-             2,
-             NOW(),
-             NOW()
-         );
-
--- 해당 주문에 포함된 강의 (자바 완전 정복)
-INSERT INTO order_items (
-    course_name,
-    price,
-    order_id,
-    course_id,
-    created_at
-) VALUES (
-             '자바 완전 정복',
-             50000,
-             LAST_INSERT_ID(),
-             1,
-             NOW()
-         );
+--
+-- INSERT INTO orders (
+--     order_number,
+--     total_amount,
+--     status,
+--     user_id,
+--     created_at,
+--     updated_at
+-- ) VALUES (
+--              'ORD-20231222-0002',
+--              50000,
+--              'COMPLETED',
+--              2,
+--              NOW(),
+--              NOW()
+--          );
+--
+-- -- 해당 주문에 포함된 강의 (자바 완전 정복)
+-- INSERT INTO order_items (
+--     course_name,
+--     price,
+--     order_id,
+--     course_id,
+--     created_at
+-- ) VALUES (
+--              '자바 완전 정복',
+--              50000,
+--              LAST_INSERT_ID(),
+--              1,
+--              NOW()
+--          );

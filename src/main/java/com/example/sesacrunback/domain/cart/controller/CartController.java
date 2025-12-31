@@ -25,6 +25,9 @@ public class CartController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody CartCreateRequest request
     ) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         CartResponse response = cartService.create(userDetails.getId(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
     }
@@ -33,6 +36,9 @@ public class CartController {
     public ResponseEntity<ApiResponse<List<CartResponse>>> findAll(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         List<CartResponse> carts = cartService.findAll(userDetails.getId());
         return ResponseEntity.ok(ApiResponse.success(carts));
     }
@@ -42,6 +48,9 @@ public class CartController {
             @PathVariable("itemId") Long itemId,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         cartService.delete(itemId, userDetails.getId());
         return ResponseEntity.noContent().build();
     }
