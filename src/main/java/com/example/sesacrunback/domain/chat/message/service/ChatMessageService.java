@@ -39,6 +39,7 @@ public class ChatMessageService {
         }
 
         ChatMessage chatMessage = ChatMessage.of(reqDto.getMessage(), chat, sender);
+        chat.updateLastMessage(chatMessage.getMessage());
 
         return ChatMessageResDto.from(chatMessageRepository.save(chatMessage));
 
