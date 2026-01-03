@@ -2,6 +2,7 @@ package com.example.sesacrunback.domain.user.controller;
 
 import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
 import com.example.sesacrunback.domain.order.dto.response.OrderResponse;
+import com.example.sesacrunback.domain.user.dto.response.MyCourseResDto;
 import com.example.sesacrunback.domain.user.dto.response.UserResDto;
 import com.example.sesacrunback.domain.user.service.UserService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
@@ -39,6 +40,13 @@ public class UserController {
     }
 
 
+
+    @GetMapping("me/courses")
+    public ResponseEntity<ApiResponse<List<MyCourseResDto>>> getMyCourses(
+        @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
+        return ResponseEntity.ok(ApiResponse.success(userService.getMyCourses(userDetails.getId())));
+    }
 
 
 }
