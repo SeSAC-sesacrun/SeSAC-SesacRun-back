@@ -40,7 +40,9 @@ public class UserService {
 
         List<Order> orders = orderRepository.findAllByUserId(id);
 
-        return orders.stream().map(OrderResponse::from).toList();
+        return orders.stream()
+                   .filter(order -> order.getStatus() == OrderState.COMPLETED)
+                   .map(OrderResponse::from).toList();
     }
 
     public List<MyCourseResDto> getMyCourses(Long id) {
