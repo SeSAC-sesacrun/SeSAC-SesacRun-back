@@ -2,6 +2,7 @@ package com.example.sesacrunback.domain.order.repository;
 
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.order.entity.OrderState;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
@@ -26,4 +27,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
         );
     }
 
+    boolean existsByUserId(Long id);
+
+    List<Order> findAllByUserId(Long id);
 }

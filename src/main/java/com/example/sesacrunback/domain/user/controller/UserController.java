@@ -1,9 +1,12 @@
 package com.example.sesacrunback.domain.user.controller;
 
+import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
+import com.example.sesacrunback.domain.order.dto.response.OrderResponse;
 import com.example.sesacrunback.domain.user.dto.response.UserResDto;
 import com.example.sesacrunback.domain.user.service.UserService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import com.example.sesacrunback.global.security.CustomUserDetails;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +29,13 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(userService.getMyProfile(userDetails.getId())));
     }
 
+
+    @GetMapping("/me/courses")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getMyCourses(
+        @AuthenticationPrincipal CustomUserDetails userDetails
+    ){
+        return ResponseEntity.ok(ApiResponse.success(userService.getMyCourses(userDetails.getId())));
+    }
 
 
 }
