@@ -30,12 +30,15 @@ public class UserController {
     }
 
 
-    @GetMapping("/me/courses")
-    public ResponseEntity<ApiResponse<List<OrderResponse>>> getMyCourses(
+    // 내 구매 내역 조회
+    @GetMapping("/me/purchases")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> getMyPurchases(
         @AuthenticationPrincipal CustomUserDetails userDetails
     ){
-        return ResponseEntity.ok(ApiResponse.success(userService.getMyCourses(userDetails.getId())));
+        return ResponseEntity.ok(ApiResponse.success(userService.getMyPurchases(userDetails.getId())));
     }
+
+
 
 
 }

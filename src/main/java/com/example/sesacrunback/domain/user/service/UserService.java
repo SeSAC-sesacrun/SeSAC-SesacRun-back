@@ -30,7 +30,7 @@ public class UserService {
        return UserResDto.from(user);
     }
 
-    public List<OrderResponse> getMyCourses(Long id) {
+    public List<OrderResponse> getMyPurchases(Long id) {
         if (!orderRepository.existsByUserId(id)){
             throw new CustomException(ErrorCode.ORDER_NOT_FOUND);
         }
