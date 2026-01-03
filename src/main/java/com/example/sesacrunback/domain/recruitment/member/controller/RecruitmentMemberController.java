@@ -1,14 +1,17 @@
 package com.example.sesacrunback.domain.recruitment.member.controller;
 
 import com.example.sesacrunback.domain.recruitment.member.dto.request.MemberUpdateReqDto;
+import com.example.sesacrunback.domain.recruitment.member.dto.response.RecruitmentMemberDto;
 import com.example.sesacrunback.domain.recruitment.member.service.RecruitmentMemberService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import com.example.sesacrunback.global.security.CustomUserDetails;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +32,15 @@ public class RecruitmentMemberController {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ApiResponse.success(
                 recruitmentMemberService.applyToRecruitment(postId, userDetails.getId())));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<RecruitmentMemberDto>>> getRecruitmentMembers(
+        @PathVariable Long postId,
+        @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(ApiResponse.success(
+            recruitmentMemberService.getRecruitmentMembers(postId, userDetails.getId())));
+
     }
 
     @PatchMapping("/{memberId}")
