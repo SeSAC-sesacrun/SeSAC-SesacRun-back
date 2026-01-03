@@ -3,12 +3,14 @@ package com.example.sesacrunback.domain.chat.chat.service;
 import com.example.sesacrunback.domain.chat.chat.dto.response.ChatRoomResDto;
 import com.example.sesacrunback.domain.chat.chat.entity.Chat;
 import com.example.sesacrunback.domain.chat.chat.repository.ChatRepository;
+import com.example.sesacrunback.domain.chat.participant.repository.ChatParticipantRepository;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
 import com.example.sesacrunback.domain.recruitment.post.repository.RecruitmentPostRepository;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
+    private final ChatParticipantRepository chatParticipationRepository;
 
     @Transactional
     public ChatRoomResDto createOrGetChatRoom(Long postId, Long currentUserId) {
@@ -38,13 +41,23 @@ public class ChatService {
         User hostUser = post.getAuthor(); // Todo n+1
 
         return chatRepository.findExistingChat(post.getId(), currentUser.getId(), hostUser.getId())
-            .map(chat -> ChatRoomResDto.from(chat, post.getId(), hostUser))
+            .map(chat -> ChatRoomResDto.roomDetail(chat, post.getId(), hostUser))
             .orElseGet(() -> createChatRoom(post, currentUser, hostUser));
     }
 
     private ChatRoomResDto createChatRoom(RecruitmentPost post, User currentUser, User hostUser) {
         Chat chat = chatRepository.save(Chat.of(post, hostUser, currentUser));
 
-        return ChatRoomResDto.from(chat, post.getId(), hostUser);
+        return ChatRoomResDto.roomDetail(chat, post.getId(), hostUser);
+    }
+
+    public List<ChatRoomResDto> getChatRooms(Long userId) {
+        List<Chat> chatRooms = chatParticipationRepository.findChatsWithAllParticipants(userId);
+        return chatRooms.stream()
+            .map(chat -> {
+                User opponent = chat.getOpponentUser(userId);
+                return ChatRoomResDto.roomList(chat, opponent);
+            })
+            .toList();
     }
 }

@@ -12,6 +12,10 @@ import com.example.sesacrunback.domain.user.repository.UserRepository;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +31,9 @@ public class ChatMessageService {
 
     @Transactional
     public ChatMessageResDto saveMessage(ChatMessageReqDto reqDto, Long senderId) {
-        Chat chat = chatRepository.findById(reqDto.getRoomId())
-            .orElseThrow(() -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+        Chat chat = getChatById(reqDto.getRoomId());
 
-        User sender = userRepository.findById(senderId)
-            .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User sender = getUserById(senderId);
 
         // 채팅 참여자인지
         if (!chatParticipantRepository.existsByChatIdAndUserId(chat.getId(), senderId)) {
@@ -39,8 +41,35 @@ public class ChatMessageService {
         }
 
         ChatMessage chatMessage = ChatMessage.of(reqDto.getMessage(), chat, sender);
+        chat.updateLastMessage(chatMessage.getMessage());
 
         return ChatMessageResDto.from(chatMessageRepository.save(chatMessage));
 
+    }
+
+    public Slice<ChatMessageResDto> getMessages(Long roomId, int page, int size, Long userId) {
+        Chat chat = getChatById(roomId);
+
+        User sender = getUserById(userId);
+
+        // 채팅 참여자인지
+        if (!chatParticipantRepository.existsByChatIdAndUserId(chat.getId(), userId)) {
+            throw new CustomException(ErrorCode.CHAT_NOT_PARTICIPANT);
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        return chatMessageRepository.findAllByChatId(roomId, pageable)
+            .map(ChatMessageResDto::from);
+    }
+
+    private Chat getChatById(Long roomId) {
+        return chatRepository.findById(roomId)
+            .orElseThrow(() -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }

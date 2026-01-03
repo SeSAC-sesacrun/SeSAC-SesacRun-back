@@ -4,7 +4,7 @@ import com.example.sesacrunback.domain.chat.participant.entity.ChatParticipant;
 import com.example.sesacrunback.domain.chat.participant.entity.ChatRole;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
 import com.example.sesacrunback.domain.user.entity.User;
-import com.example.sesacrunback.global.common.entity.BaseCreateEntity;
+import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "chat")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Chat extends BaseCreateEntity {
+public class Chat extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
@@ -40,6 +40,8 @@ public class Chat extends BaseCreateEntity {
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatParticipant> participants = new ArrayList<>();
+
+    private String lastMessageContent;
 
     private Chat(RecruitmentPost post) {
         this.post = post;
@@ -57,5 +59,17 @@ public class Chat extends BaseCreateEntity {
         chat.addParticipant(host, ChatRole.HOST);
         chat.addParticipant(member, ChatRole.MEMBER);
         return chat;
+    }
+
+    public void updateLastMessage(String message) {
+        lastMessageContent = message;
+    }
+
+    public User getOpponentUser(Long myUserId) {
+        return participants.stream()
+            .map(ChatParticipant::getUser)
+            .filter(user -> !user.getId().equals(myUserId))
+            .findFirst()
+            .orElse(null);
     }
 }
