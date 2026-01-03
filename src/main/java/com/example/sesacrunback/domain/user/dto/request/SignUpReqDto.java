@@ -28,7 +28,7 @@ public class SignUpReqDto {
         return User.builder()
                    .email(email)
                    .password(encode)
-                   .name(email)
+                   .name(name)
                    .build();
     }
 
