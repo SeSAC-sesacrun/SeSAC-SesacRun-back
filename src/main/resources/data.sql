@@ -56,50 +56,50 @@ INSERT INTO chat_messages (message, chat_id, sender_id, created_at)
 VALUES ('안녕하세요 스터디 참여하고 싶습니다.', 1, 3, NOW()),
        ('네 환영합니다!', 1, 2, NOW());
 -- Orders
--- INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at) VALUES
--- ('ORD-20231222-0001', 50000, 'ORDER', 2, NOW(), NOW());
---
--- -- Order Items
--- INSERT INTO order_items (course_name, price, order_id, course_id, created_at) VALUES
--- ('자바 완전 정복', 50000, 1, 1, NOW());
---
--- -- Payments
--- INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at) VALUES
--- ('imp_1234567890', 50000, 'COMPLETED', 1, NOW(), NOW());
+INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at) VALUES
+('ORD-20231222-0001', 50000, 'ORDER', 2, NOW(), NOW());
+
+-- Order Items
+INSERT INTO order_items (course_name, price, order_id, course_id, created_at) VALUES
+('자바 완전 정복', 50000, 1, 1, NOW());
+
+-- Payments
+INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at) VALUES
+('imp_1234567890', 50000, 'COMPLETED', 1, NOW(), NOW());
 
 -- Cart Items
--- INSERT INTO cart_items (user_id, course_id, created_at) VALUES
--- (3, 2, NOW());
+INSERT INTO cart_items (user_id, course_id, created_at) VALUES
+(3, 2, NOW());
 
--- ✅ COMPLETED Order (이학생이 자바 완전 정복 구매 완료)
---
--- INSERT INTO orders (
---     order_number,
---     total_amount,
---     status,
---     user_id,
---     created_at,
---     updated_at
--- ) VALUES (
---              'ORD-20231222-0002',
---              50000,
---              'COMPLETED',
---              2,
---              NOW(),
---              NOW()
---          );
---
--- -- 해당 주문에 포함된 강의 (자바 완전 정복)
--- INSERT INTO order_items (
---     course_name,
---     price,
---     order_id,
---     course_id,
---     created_at
--- ) VALUES (
---              '자바 완전 정복',
---              50000,
---              LAST_INSERT_ID(),
---              1,
---              NOW()
---          );
+-- COMPLETED Order (이학생이 자바 완전 정복 구매 완료)
+
+INSERT INTO orders (
+    order_number,
+    total_amount,
+    status,
+    user_id,
+    created_at,
+    updated_at
+) VALUES (
+             'ORD-20231222-0002',
+             50000,
+             'COMPLETED',
+             2,
+             NOW(),
+             NOW()
+         );
+
+-- 해당 주문에 포함된 강의 (자바 완전 정복)
+INSERT INTO order_items (
+    course_name,
+    price,
+    order_id,
+    course_id,
+    created_at
+) VALUES (
+             '자바 완전 정복',
+             50000,
+             LAST_INSERT_ID(),
+             1,
+             NOW()
+         );
