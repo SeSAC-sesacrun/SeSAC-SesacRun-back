@@ -13,7 +13,6 @@ public class ChatRoomResDto {
 
     private final Long roomId;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Long postId;
     private final String opponentName;
     private final Long opponentId;
@@ -38,7 +37,7 @@ public class ChatRoomResDto {
     public static ChatRoomResDto roomList(Chat chat, User opponent) {
         return new ChatRoomResDto(
             chat.getId(),
-            null,
+            chat.getPost().getId(),
             opponent.getName(),
             opponent.getId(),
             chat.getLastMessageContent(),
