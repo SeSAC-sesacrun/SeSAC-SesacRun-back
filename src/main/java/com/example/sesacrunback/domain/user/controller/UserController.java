@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/users/me")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/me")
+    @GetMapping
     public ResponseEntity<ApiResponse<UserResDto>> getMyProfile(
         @AuthenticationPrincipal CustomUserDetails userDetails
     ){
@@ -32,7 +32,7 @@ public class UserController {
 
 
     // 내 결제 주문 부러오기 ( 하나의 주문 기준 , 해당 API )
-    @GetMapping("/me/purchases")
+    @GetMapping("/purchases")
     public ResponseEntity<ApiResponse<List<OrderResponse>>> getMyPurchases(
         @AuthenticationPrincipal CustomUserDetails userDetails
     ){
@@ -42,7 +42,7 @@ public class UserController {
 
 
     // 결제한 모든 강의 조회
-    @GetMapping("/me/courses")
+    @GetMapping("/courses")
     public ResponseEntity<ApiResponse<List<MyCourseResDto>>> getMyCourses(
         @AuthenticationPrincipal CustomUserDetails userDetails
     ){
@@ -51,11 +51,13 @@ public class UserController {
 
 
     // 내가 작성한 게시글
-    @GetMapping("/me/posts")
+    @GetMapping("/posts")
     public ResponseEntity<ApiResponse<List<MyPostResDto>>> getMyPosts(
         @AuthenticationPrincipal CustomUserDetails userDetails
     ){
         return ResponseEntity.ok(ApiResponse.success(userService.getMyPosts(userDetails.getId())));
     }
+
+
 
 }
