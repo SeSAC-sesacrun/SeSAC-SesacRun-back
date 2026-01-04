@@ -32,17 +32,12 @@ public class UserService {
     private final RecruitmentMemberRepository recruitmentMemberRepository;
 
     public UserResDto getMyProfile(Long id) {
-       User user =  userRepository.findById(id).orElseThrow(
-            ()-> new CustomException(ErrorCode.MEMBER_NOT_FOUND)
-        );
 
-       return UserResDto.from(user);
+        return UserResDto.from(userRepository.getReferenceById(id));
     }
 
     public List<OrderResponse> getMyPurchases(Long id) {
-        if (!orderRepository.existsByUserId(id)){
-            throw new CustomException(ErrorCode.ORDER_NOT_FOUND);
-        }
+
 
         List<Order> orders = orderRepository.findAllByUserId(id);
 
@@ -52,9 +47,7 @@ public class UserService {
     }
 
     public List<MyCourseResDto> getMyCourses(Long id) {
-        if (!orderRepository.existsByUserId(id)){
-            throw new CustomException(ErrorCode.ORDER_NOT_FOUND);
-        }
+
 
         List<Order> orders = orderRepository.findAllByUserId(id);
 
@@ -68,10 +61,7 @@ public class UserService {
 
     // 내가 작성한 게시글 조회
     public List<MyPostResDto> getMyPosts(Long id) {
-        userRepository.findById(id).orElseThrow(
-            () -> new CustomException(ErrorCode.MEMBER_NOT_FOUND)
-        );
-        
+
         List<RecruitmentPost> posts = recruitmentPostRepository.findAllByAuthorId(id);
 
         return posts.stream()
@@ -81,9 +71,6 @@ public class UserService {
 
     // 내가 참여한 모임 조회
     public List<MyMeetingResDto> getMyMeetings(Long id) {
-        userRepository.findById(id).orElseThrow(
-            () -> new CustomException(ErrorCode.MEMBER_NOT_FOUND)
-        );
 
         List<RecruitmentMember> members = recruitmentMemberRepository.findAllByUserId(id);
 

@@ -27,6 +27,7 @@ public class MyCourseResDto {
                    .courseTitle(orderItem.getCourse().getTitle())
                    .thumbnail(orderItem.getCourse().getThumbnail())
                    .price(orderItem.getCourse().getPrice())
+                   .purchasedAt(orderItem.getOrder().getCreatedAt())
                    .build();
 
     }
