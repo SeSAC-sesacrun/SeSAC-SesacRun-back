@@ -4,9 +4,12 @@ import com.example.sesacrunback.domain.order.dto.response.OrderResponse;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.order.entity.OrderState;
 import com.example.sesacrunback.domain.order.repository.OrderRepository;
+import com.example.sesacrunback.domain.recruitment.member.entity.RecruitmentMember;
+import com.example.sesacrunback.domain.recruitment.member.repository.RecruitmentMemberRepository;
 import com.example.sesacrunback.domain.recruitment.post.entity.RecruitmentPost;
 import com.example.sesacrunback.domain.recruitment.post.repository.RecruitmentPostRepository;
 import com.example.sesacrunback.domain.user.dto.response.MyCourseResDto;
+import com.example.sesacrunback.domain.user.dto.response.MyMeetingResDto;
 import com.example.sesacrunback.domain.user.dto.response.MyPostResDto;
 import com.example.sesacrunback.domain.user.dto.response.UserResDto;
 import com.example.sesacrunback.domain.user.entity.User;
@@ -26,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
+    private final RecruitmentMemberRepository recruitmentMemberRepository;
 
     public UserResDto getMyProfile(Long id) {
        User user =  userRepository.findById(id).orElseThrow(
@@ -72,6 +76,19 @@ public class UserService {
 
         return posts.stream()
                    .map(MyPostResDto::from)
+                   .toList();
+    }
+
+    // 내가 참여한 모임 조회
+    public List<MyMeetingResDto> getMyMeetings(Long id) {
+        userRepository.findById(id).orElseThrow(
+            () -> new CustomException(ErrorCode.MEMBER_NOT_FOUND)
+        );
+
+        List<RecruitmentMember> members = recruitmentMemberRepository.findAllByUserId(id);
+
+        return members.stream()
+                   .map(MyMeetingResDto::from)
                    .toList();
     }
 }
