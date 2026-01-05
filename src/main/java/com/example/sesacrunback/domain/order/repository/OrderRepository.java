@@ -3,12 +3,16 @@ package com.example.sesacrunback.domain.order.repository;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.order.entity.OrderState;
+import com.example.sesacrunback.domain.user.entity.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -31,6 +35,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                 OrderState.COMPLETED
         );
     }
+
+    @EntityGraph(attributePaths = {"orderItems", "payment", "orderItems.course"})
+    List<Order> findAllByUserAndStatusOrderByCreatedAtDesc(User user, OrderState status);
+
+    // orderId와 User를 기준으로 주문 상세 정보를 조회
+    @EntityGraph(attributePaths = {"orderItems", "orderItems.course", "payment", "user"})
+    Optional<Order> findByIdAndUser(Long id, User user);
 
     boolean existsByUserId(Long id);
 
