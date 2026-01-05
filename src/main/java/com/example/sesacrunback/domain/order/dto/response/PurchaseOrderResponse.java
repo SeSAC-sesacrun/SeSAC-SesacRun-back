@@ -1,6 +1,7 @@
 package com.example.sesacrunback.domain.order.dto.response;
 
 import com.example.sesacrunback.domain.order.entity.Order;
+import com.example.sesacrunback.domain.order.entity.OrderState;
 import com.example.sesacrunback.domain.orderItem.entity.OrderItem;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,20 +13,24 @@ import java.util.List;
 @Builder
 public class PurchaseOrderResponse {
     private final Long orderId;
+    private final String orderNumber;
     private final String orderTitle;
     private final String thumbnail;
     private final int totalAmount;
-    private final LocalDateTime purchasedAt;
+    private final OrderState status;
+    private final LocalDateTime createdAt;
 
     public static PurchaseOrderResponse from(Order order) {
         List<OrderItem> orderItems = order.getOrderItems();
         if (orderItems == null || orderItems.isEmpty()) {
             return PurchaseOrderResponse.builder()
                     .orderId(order.getId())
+                    .orderNumber(order.getOrderNumber())
                     .orderTitle("주문 항목 없음")
                     .thumbnail(null) // 기본 이미지 URL
                     .totalAmount(order.getPayment() != null ? order.getPayment().getAmount() : 0)
-                    .purchasedAt(order.getCreatedAt())
+                    .createdAt(order.getCreatedAt())
+                    .status(order.getStatus())
                     .build();
         }
 
@@ -35,10 +40,12 @@ public class PurchaseOrderResponse {
 
         return PurchaseOrderResponse.builder()
                 .orderId(order.getId())
+                .orderNumber(order.getOrderNumber())
                 .orderTitle(title)
                 .thumbnail(representativeThumbnail)
                 .totalAmount(paymentAmount)
-                .purchasedAt(order.getCreatedAt())
+                .createdAt(order.getCreatedAt())
+                .status(order.getStatus())
                 .build();
     }
 
