@@ -53,8 +53,18 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     /**
      * 카테고리별 강의 목록
+     * - Section과 Lecture가 1개 이상 있는 강의만 조회
+     * - PUBLISHED 상태만 조회
      */
-    Page<Course> findByCategory(String category, Pageable pageable);
+    @Query("""
+        SELECT DISTINCT c
+        FROM Course c
+        JOIN c.sections s
+        JOIN s.lectures l
+        WHERE c.status = 'PUBLISHED'
+          AND c.category = :category
+    """)
+    Page<Course> findByCategory(@Param("category") String category, Pageable pageable);
 
     /**
      * 강사별 강의 목록 (Paging)

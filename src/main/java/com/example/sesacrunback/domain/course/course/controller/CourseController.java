@@ -95,6 +95,19 @@ public class CourseController {
         return ResponseEntity.ok(ApiResponse.success(courses));
     }
 
+    /**
+     * 내가 수강 중인 강의 목록 조회
+     * (결제 완료 기준, 정렬 미지원)
+     */
+    @GetMapping("/enrolled")
+    public ResponseEntity<ApiResponse<Page<CourseResponse>>> getEnrolledCourses(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PageableDefault(size = 12) Pageable pageable) {
+        Long userId = userDetails.getId();
+        Page<CourseResponse> courses = courseService.getEnrolledCourses(userId, pageable);
+        return ResponseEntity.ok(ApiResponse.success(courses));
+    }
+
     @PutMapping("/{courseId}")
     // @PreAuthorize("hasRole('INSTRUCTOR')") // 인증 시스템 협업 중이므로 주석 처리
     public ResponseEntity<ApiResponse<Long>> updateCourse(
