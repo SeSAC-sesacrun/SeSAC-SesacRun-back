@@ -18,4 +18,6 @@ public interface RecruitmentMemberRepository extends JpaRepository <RecruitmentM
     Optional<RecruitmentMember> findTopByPostAndUserOrderByCreatedAtDesc(RecruitmentPost post, User user);
 
     List<RecruitmentMember> findByPostIdAndUserIdNot(Long postId, Long userId);
+  
+    List<RecruitmentMember> findAllByUserId(Long id);
 }

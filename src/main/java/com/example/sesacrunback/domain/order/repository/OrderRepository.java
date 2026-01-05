@@ -1,8 +1,18 @@
 package com.example.sesacrunback.domain.order.repository;
 
+import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.order.entity.OrderState;
+import com.example.sesacrunback.domain.user.entity.User;
+import org.springframework.data.jpa.repository.EntityGraph;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -26,4 +36,40 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
         );
     }
 
+    @EntityGraph(attributePaths = {"orderItems", "payment", "orderItems.course"})
+    List<Order> findAllByUserAndStatusOrderByCreatedAtDesc(User user, OrderState status);
+
+    // orderId와 User를 기준으로 주문 상세 정보를 조회
+    @EntityGraph(attributePaths = {"orderItems", "orderItems.course", "payment", "user"})
+    Optional<Order> findByIdAndUser(Long id, User user);
+
+    boolean existsByUserId(Long id);
+
+    List<Order> findAllByUserId(Long id);
+
+    /**
+     * 결제 완료된 주문을 기준으로
+     * 사용자가 수강 중인 강의 목록 조회
+     */
+    @Query(
+            value = """
+                SELECT DISTINCT oi.course
+                FROM Order o
+                JOIN o.orderItems oi
+                LEFT JOIN FETCH oi.course.instructor
+                WHERE o.user.id = :userId
+                  AND o.status = 'COMPLETED'
+            """,
+            countQuery = """
+                SELECT COUNT(DISTINCT oi.course.id)
+                FROM Order o
+                JOIN o.orderItems oi
+                WHERE o.user.id = :userId
+                  AND o.status = 'COMPLETED'
+            """
+    )
+    Page<Course> findEnrolledCourses(
+            @Param("userId") Long userId,
+            Pageable pageable
+    );
 }

@@ -32,10 +32,10 @@ public class SecurityConfig {
             // 엔드포인트 권한 설정
             .authorizeHttpRequests(auth -> auth
                         // 코드이해를 높이기 위해 .anyRequest().authenticated()으로 처리하지 않고 Method 단위로 명시
-                        // 테스트
 
+                        //유저
+                        .requestMatchers("/api/users/**").authenticated()
                         // 인증
-                       .requestMatchers("/api/auth/me").authenticated()// 회원가입, 로그인 : 누구나
                        .requestMatchers("/api/auth/**").permitAll()// 회원가입, 로그인 : 누구나
 
                         // 채팅
