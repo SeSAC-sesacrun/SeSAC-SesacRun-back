@@ -47,14 +47,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                 JOIN o.orderItems oi
                 LEFT JOIN FETCH oi.course.instructor
                 WHERE o.user.id = :userId
-                  AND o.status = com.example.sesacrunback.domain.order.entity.OrderState.COMPLETED
+                  AND o.status = 'COMPLETED'
             """,
             countQuery = """
                 SELECT COUNT(DISTINCT oi.course.id)
                 FROM Order o
                 JOIN o.orderItems oi
                 WHERE o.user.id = :userId
-                  AND o.status = com.example.sesacrunback.domain.order.entity.OrderState.COMPLETED
+                  AND o.status = 'COMPLETED'
             """
     )
     Page<Course> findEnrolledCourses(
