@@ -35,7 +35,7 @@ public class CartService {
         cartRepository.findByUserAndCourse(user, course).ifPresent(item -> {
             throw new CustomException(ErrorCode.CART_ITEM_ALREADY_EXISTS);
         });
-        boolean isOrderExist = orderItemRepository.existsByOrderUserAndCourseIdAndOrderStatus(user, course.getId(), OrderState.ORDER);
+        boolean isOrderExist = orderItemRepository.existsByOrderUserAndCourseIdAndOrderStatus(user, course.getId(), OrderState.COMPLETED);
         if (isOrderExist) {
             throw new CustomException(ErrorCode.ORDER_ALREADY_EXISTS);
         }

@@ -6,6 +6,7 @@ import com.example.sesacrunback.domain.payment.service.PaymentService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import com.example.sesacrunback.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,10 @@ public class PaymentController {
     public ResponseEntity<ApiResponse<PaymentResponse>> complete(
             @RequestBody PaymentCreateRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails
-
     ) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         PaymentResponse response = paymentService.complete(request, userDetails.getId());
         return ResponseEntity.ok(ApiResponse.success(response));
     }

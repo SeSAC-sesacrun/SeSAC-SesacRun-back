@@ -4,6 +4,7 @@ import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.order.entity.OrderState;
 import com.example.sesacrunback.domain.user.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -37,4 +38,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @EntityGraph(attributePaths = {"orderItems", "orderItems.course", "payment", "user"})
     Optional<Order> findByIdAndUser(Long id, User user);
 
+    boolean existsByUserId(Long id);
+
+    List<Order> findAllByUserId(Long id);
 }

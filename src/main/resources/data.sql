@@ -6,8 +6,8 @@ INSERT INTO users (email, password, name, role, created_at, updated_at) VALUES
 
 -- Courses
 INSERT INTO courses (title, description, detailed_description, thumbnail, category, price, student_count, status, instructor_id, created_at, updated_at) VALUES
-('자바 완전 정복', '자바 기초부터 심화까지', '자바의 모든 것을 다룹니다. 변수, 연산자, 제어문부터 객체지향 프로그래밍까지 체계적으로 학습합니다.', 'https://example.com/java.png', 'Development', 50000, 0, 'PUBLISHED', 1, NOW(), NOW()),
-('스프링 부트 입문', '웹 개발의 시작 스프링 부트', '스프링 부트로 웹 서버를 만들어봅니다. REST API 설계와 데이터베이스 연동을 배웁니다.', 'https://example.com/spring.png', 'Web', 60000, 0, 'PUBLISHED', 1, NOW(), NOW());
+('자바 완전 정복', '자바 기초부터 심화까지', '자바의 모든 것을 다룹니다. 변수, 연산자, 제어문부터 객체지향 프로그래밍까지 체계적으로 학습합니다.', 'https://example.com/java.png', 'Development', 0, 0, 'PUBLISHED', 1, NOW(), NOW()),
+('스프링 부트 입문', '웹 개발의 시작 스프링 부트', '스프링 부트로 웹 서버를 만들어봅니다. REST API 설계와 데이터베이스 연동을 배웁니다.', 'https://example.com/spring.png', 'Web', 1000, 0, 'PUBLISHED', 1, NOW(), NOW());
 
 -- Course Features
 INSERT INTO course_features (course_id, feature) VALUES
@@ -71,7 +71,7 @@ INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, 
 INSERT INTO cart_items (user_id, course_id, created_at) VALUES
 (3, 2, NOW());
 
--- ✅ COMPLETED Order (이학생이 자바 완전 정복 구매 완료)
+-- COMPLETED Order (이학생이 자바 완전 정복 구매 완료)
 
 INSERT INTO orders (
     order_number,

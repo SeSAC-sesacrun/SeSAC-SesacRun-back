@@ -19,9 +19,7 @@ import org.springframework.stereotype.Component;
 public class JwtProvider {
 
     private final SecretKey key;
-    // yml 파일에서 환경변수로 받아오는게 좋을지 하드코딩 해도 문제가 없을지 고민
-    private final Long accessExpiration = 900000L;// 15분
-    // private final Long refreshExpiration = 1209600000L; //14일
+    private final Long accessExpiration = 1000L * 60 * 60 * 2; // 2시간
 
     public JwtProvider(
         @Value("${jwt.secret}") String key) {
