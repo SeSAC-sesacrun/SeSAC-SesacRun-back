@@ -1,6 +1,7 @@
 package com.example.sesacrunback.domain.recruitment.member.service;
 
 import com.example.sesacrunback.domain.recruitment.member.dto.request.MemberUpdateReqDto;
+import com.example.sesacrunback.domain.recruitment.member.dto.response.RecruitmentMemberDto;
 import com.example.sesacrunback.domain.recruitment.member.entity.MemberStatus;
 import com.example.sesacrunback.domain.recruitment.member.entity.RecruitmentMember;
 import com.example.sesacrunback.domain.recruitment.member.repository.RecruitmentMemberRepository;
@@ -10,6 +11,7 @@ import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -92,6 +94,22 @@ public class RecruitmentMemberService {
 
     }
 
+    public List<RecruitmentMemberDto> getRecruitmentMembers(Long postId, Long userId) {
+        RecruitmentPost post = getPostById(postId);
+        User user = getUserById(userId);
+
+        if (!post.isPostOwner(user.getId())) {
+            throw new CustomException(ErrorCode.POST_NOT_OWNER);
+        }
+
+        List<RecruitmentMember> members = recruitmentMemberRepository.findByPostIdAndUserIdNot(
+            postId, userId);
+
+        return members.stream()
+            .map(RecruitmentMemberDto::from)
+            .toList();
+    }
+
     private RecruitmentPost getPostById(Long postId) {
         return recruitmentPostRepository.findById(postId)
             .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
@@ -101,4 +119,5 @@ public class RecruitmentMemberService {
         return userRepository.findById(userId)
             .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
+
 }
