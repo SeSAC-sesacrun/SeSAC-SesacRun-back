@@ -148,6 +148,25 @@ public class CourseService {
     }
 
     /**
+     * 사용자가 결제 완료한 강의 목록 조회
+     * - Order 기준
+     * - 정렬은 지원하지 않음 (Pageable의 page/size만 사용)
+     */
+    public Page<CourseResponse> getEnrolledCourses(Long userId, Pageable pageable) {
+        log.info("Getting enrolled courses for user ID: {}", userId);
+
+        // DISTINCT 쿼리 특성상 정렬 불가
+        // Pageable의 page/size만 사용
+        Pageable pagingOnly = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
+
+        return orderRepository.findEnrolledCourses(userId, pagingOnly)
+                .map(CourseResponse::from);
+    }
+
+    /**
      * 강의 수정
      */
     @Transactional
