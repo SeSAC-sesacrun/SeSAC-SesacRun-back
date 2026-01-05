@@ -28,11 +28,11 @@ public class JwtProvider {
     }
 
     // 엑세스 토큰 생성
-    public String createAccessToken(String email, UserRole role){
+    public String createAccessToken(String email, UserRole role,Long userId){
         return Jwts.builder()
                    .setSubject(email)
                    .claim("role", role)
-                //    .claim("type","access")
+                   .claim("userId", userId)
                    .setIssuedAt(new Date())
                    .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
                    .signWith(key)
