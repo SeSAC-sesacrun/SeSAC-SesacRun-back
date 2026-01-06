@@ -53,17 +53,18 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
             JOIN e.course c
             JOIN c.instructor i
             WHERE e.user.id = :userId
-              AND e.status = 'ACTIVE'
+              AND e.status = :status
         """,
         countQuery = """
             SELECT COUNT(e)
             FROM Enrollment e
             WHERE e.user.id = :userId
-              AND e.status = 'ACTIVE'
+              AND e.status = :status
         """
     )
     Page<EnrolledCourseResponse> findEnrolledCourses(
         @Param("userId") Long userId,
+        @Param("status") EnrollmentStatus status,
         Pageable pageable
     );
 }

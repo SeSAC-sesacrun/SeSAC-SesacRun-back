@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Table(
     name = "enrollments",
     uniqueConstraints = @UniqueConstraint(
-        name = "uk_user_course_active",
+        name = "uk_user_course_status",
         columnNames = {"user_id", "course_id", "status"}
     ),
     indexes = {

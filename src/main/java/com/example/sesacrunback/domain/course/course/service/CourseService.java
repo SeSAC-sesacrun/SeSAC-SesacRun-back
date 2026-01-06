@@ -9,6 +9,7 @@ import com.example.sesacrunback.domain.course.course.dto.response.CourseWatchRes
 import com.example.sesacrunback.domain.course.course.dto.response.EnrolledCourseResponse;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.course.course.repository.CourseRepository;
+import com.example.sesacrunback.domain.enrollment.entity.EnrollmentStatus;
 import com.example.sesacrunback.domain.enrollment.repository.EnrollmentRepository;
 import com.example.sesacrunback.domain.course.lecture.entity.Lecture;
 import com.example.sesacrunback.domain.user.entity.User;
@@ -156,7 +157,7 @@ public class CourseService {
     public Page<EnrolledCourseResponse> getEnrolledCourses(Long userId, Pageable pageable) {
         log.info("Getting enrolled courses for user ID: {}", userId);
 
-        return enrollmentRepository.findEnrolledCourses(userId, pageable);
+        return enrollmentRepository.findEnrolledCourses(userId, EnrollmentStatus.ACTIVE, pageable);
     }
 
     /**

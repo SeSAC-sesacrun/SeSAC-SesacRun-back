@@ -50,14 +50,25 @@ public class EnrollmentService {
      */
     @Transactional
     public void cancelForOrder(Order order, User user) {
+        Set<Long> processedCourseIds = new HashSet<>();
+
         for (OrderItem orderItem : order.getOrderItems()) {
+            Course course = orderItem.getCourse();
+
+            // 동일 강의 중복 처리 방지
+            if (processedCourseIds.contains(course.getId())) {
+                continue;
+            }
+
             enrollmentRepository
                     .findByUserIdAndCourseIdAndStatus(
                             user.getId(),
-                            orderItem.getCourse().getId(),
+                            course.getId(),
                             EnrollmentStatus.ACTIVE
                     )
                     .ifPresent(Enrollment::cancel);
+
+            processedCourseIds.add(course.getId());
         }
     }
 }
