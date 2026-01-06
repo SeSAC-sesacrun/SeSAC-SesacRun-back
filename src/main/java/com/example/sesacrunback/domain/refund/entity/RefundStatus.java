@@ -1,6 +1,7 @@
 package com.example.sesacrunback.domain.refund.entity;
 
 public enum RefundStatus {
-    COMPLETED,
-    FAILED,
+    REQUESTED, // 환불 요청
+    COMPLETED, // 환불 완료
+    FAILED     // 환불 실패
 }

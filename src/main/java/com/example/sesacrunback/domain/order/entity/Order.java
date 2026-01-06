@@ -89,4 +89,9 @@ public class Order extends BaseTimeEntity {
     public void completePayment() {
         this.status = OrderState.COMPLETED;
     }
+
+    // 환불시 주문 상태 변경
+    public void cancel() {
+        this.status = OrderState.REFUND;
+    }
 }

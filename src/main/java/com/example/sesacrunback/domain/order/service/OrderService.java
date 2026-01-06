@@ -2,7 +2,6 @@ package com.example.sesacrunback.domain.order.service;
 
 import com.example.sesacrunback.domain.order.dto.response.OrderDetailResponse;
 import com.example.sesacrunback.domain.order.dto.response.PurchaseOrderResponse;
-import com.example.sesacrunback.domain.order.entity.OrderState;
 import com.example.sesacrunback.domain.order.repository.OrderRepository;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
@@ -29,11 +28,11 @@ public class OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // 사용자의 완료된 주문 목록을 조회
-        List<Order> completedOrders = orderRepository.findAllByUserAndStatusOrderByCreatedAtDesc(user, OrderState.COMPLETED);
+        // 사용자의 주문 목록을 조회
+        List<Order> orders  = orderRepository.findAllByUserOrderByCreatedAtDesc(user);
 
         // Order 목록을 PurchaseOrderResponse 목록으로 변환
-        return completedOrders.stream()
+        return orders .stream()
                 .map(PurchaseOrderResponse::from)
                 .collect(Collectors.toList());
     }
