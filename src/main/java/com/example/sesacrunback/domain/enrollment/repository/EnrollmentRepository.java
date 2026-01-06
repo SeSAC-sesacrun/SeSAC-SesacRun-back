@@ -1,6 +1,6 @@
 package com.example.sesacrunback.domain.enrollment.repository;
 
-import com.example.sesacrunback.domain.course.course.entity.Course;
+import com.example.sesacrunback.domain.course.course.dto.response.EnrolledCourseResponse;
 import com.example.sesacrunback.domain.enrollment.entity.Enrollment;
 import com.example.sesacrunback.domain.enrollment.entity.EnrollmentStatus;
 import java.util.Optional;
@@ -26,17 +26,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
         EnrollmentStatus status
     );
 
-    @Query("""
-        SELECT e.course
-        FROM Enrollment e
-        WHERE e.user.id = :userId
-          AND e.status = 'ACTIVE'
-    """)
-    Page<Course> findEnrolledCourses(
-        @Param("userId") Long userId,
-        Pageable pageable
-    );
-
     default boolean hasActiveEnrollment(Long userId, Long courseId) {
         return existsByUserIdAndCourseIdAndStatus(
             userId,
@@ -44,4 +33,37 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
             EnrollmentStatus.ACTIVE
         );
     }
+
+    /**
+     * 수강 중인 강의 목록 조회 (DTO Projection)
+     */
+    @Query(
+        value = """
+            SELECT new com.example.sesacrunback.domain.course.course.dto.response.EnrolledCourseResponse(
+                e.id,
+                e.createdAt,
+                c.id,
+                c.title,
+                c.thumbnail,
+                c.price,
+                i.id,
+                i.name
+            )
+            FROM Enrollment e
+            JOIN e.course c
+            JOIN c.instructor i
+            WHERE e.user.id = :userId
+              AND e.status = 'ACTIVE'
+        """,
+        countQuery = """
+            SELECT COUNT(e)
+            FROM Enrollment e
+            WHERE e.user.id = :userId
+              AND e.status = 'ACTIVE'
+        """
+    )
+    Page<EnrolledCourseResponse> findEnrolledCourses(
+        @Param("userId") Long userId,
+        Pageable pageable
+    );
 }

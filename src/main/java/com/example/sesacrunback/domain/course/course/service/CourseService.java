@@ -6,6 +6,7 @@ import com.example.sesacrunback.domain.course.course.dto.response.CourseDetailRe
 import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseViewContext;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseWatchResponse;
+import com.example.sesacrunback.domain.course.course.dto.response.EnrolledCourseResponse;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.course.course.repository.CourseRepository;
 import com.example.sesacrunback.domain.enrollment.repository.EnrollmentRepository;
@@ -150,13 +151,12 @@ public class CourseService {
     /**
      * 사용자가 수강 중인 강의 목록 조회
      * - Enrollment 기준 (ACTIVE 상태만)
-     * - 정렬 완전 지원
+     * - 제목순, 최근 수강신청 순 정렬 지원
      */
-    public Page<CourseResponse> getEnrolledCourses(Long userId, Pageable pageable) {
+    public Page<EnrolledCourseResponse> getEnrolledCourses(Long userId, Pageable pageable) {
         log.info("Getting enrolled courses for user ID: {}", userId);
 
-        return enrollmentRepository.findEnrolledCourses(userId, pageable)
-                .map(CourseResponse::from);
+        return enrollmentRepository.findEnrolledCourses(userId, pageable);
     }
 
     /**
