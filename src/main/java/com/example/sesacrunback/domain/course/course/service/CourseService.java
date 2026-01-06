@@ -8,7 +8,7 @@ import com.example.sesacrunback.domain.course.course.dto.response.CourseViewCont
 import com.example.sesacrunback.domain.course.course.dto.response.CourseWatchResponse;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.course.course.repository.CourseRepository;
-import com.example.sesacrunback.domain.order.repository.OrderRepository;
+import com.example.sesacrunback.domain.enrollment.repository.EnrollmentRepository;
 import com.example.sesacrunback.domain.course.lecture.entity.Lecture;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.exception.CustomException;
@@ -34,7 +34,7 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final EntityManager entityManager;
-    private final OrderRepository orderRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     /**
      * 강의 생성 (Phase 1: 생성 즉시 게시)
@@ -64,7 +64,7 @@ public class CourseService {
 
         final boolean isUserLoggedIn = userId != null;
         final boolean isInstructor = isUserLoggedIn && course.isOwner(userId);
-        final boolean hasPurchased = isUserLoggedIn && orderRepository.hasCompletedOrderForCourse(userId, courseId);
+        final boolean hasPurchased = isUserLoggedIn && enrollmentRepository.hasActiveEnrollment(userId, courseId);
         final boolean canWatch = isInstructor || hasPurchased;
 
         CourseViewContext ctx = new CourseViewContext(isInstructor);
@@ -82,7 +82,7 @@ public class CourseService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
         if (!course.isOwner(userId)
-                && !orderRepository.hasCompletedOrderForCourse(userId, courseId)) {
+                && !enrollmentRepository.hasActiveEnrollment(userId, courseId)) {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
@@ -148,21 +148,14 @@ public class CourseService {
     }
 
     /**
-     * 사용자가 결제 완료한 강의 목록 조회
-     * - Order 기준
-     * - 정렬은 지원하지 않음 (Pageable의 page/size만 사용)
+     * 사용자가 수강 중인 강의 목록 조회
+     * - Enrollment 기준 (ACTIVE 상태만)
+     * - 정렬 완전 지원
      */
     public Page<CourseResponse> getEnrolledCourses(Long userId, Pageable pageable) {
         log.info("Getting enrolled courses for user ID: {}", userId);
 
-        // DISTINCT 쿼리 특성상 정렬 불가
-        // Pageable의 page/size만 사용
-        Pageable pagingOnly = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize()
-        );
-
-        return orderRepository.findEnrolledCourses(userId, pagingOnly)
+        return enrollmentRepository.findEnrolledCourses(userId, pageable)
                 .map(CourseResponse::from);
     }
 

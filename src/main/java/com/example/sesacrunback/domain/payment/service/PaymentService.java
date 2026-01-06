@@ -2,6 +2,7 @@ package com.example.sesacrunback.domain.payment.service;
 
 import com.example.sesacrunback.domain.cart.entity.CartItem;
 import com.example.sesacrunback.domain.cart.repository.CartRepository;
+import com.example.sesacrunback.domain.enrollment.service.EnrollmentService;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.order.repository.OrderRepository;
 import com.example.sesacrunback.domain.payment.dto.request.PaymentCreateRequest;
@@ -30,6 +31,7 @@ public class PaymentService {
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
+    private final EnrollmentService enrollmentService;
 
     @Transactional
     public PaymentResponse complete(PaymentCreateRequest request, Long userId) {
@@ -84,7 +86,10 @@ public class PaymentService {
         // 8. 주문 상태 변경
         order.completePayment();
 
-        // 9. 장바구니 비우기
+        // 9. Enrollment 생성 (결제 성공의 결과물)
+        enrollmentService.createForOrder(order, user);
+
+        // 10. 장바구니 비우기
         cartRepository.deleteAll(cartItems);
 
         return PaymentResponse.from(savedPayment);
