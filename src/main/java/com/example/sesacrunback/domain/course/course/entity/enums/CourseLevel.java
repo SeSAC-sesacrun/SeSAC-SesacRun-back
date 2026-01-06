@@ -26,7 +26,15 @@ public enum CourseLevel {
      */
     @JsonCreator
     public static CourseLevel from(String value) {
-        return CourseLevel.valueOf(value.toUpperCase());
+        if (value == null) {
+            return null;
+        }
+        for (CourseLevel level : values()) {
+            if (level.name().equalsIgnoreCase(value)) {
+                return level;
+            }
+        }
+        throw new IllegalArgumentException("유효하지 않은 레벨 값입니다: " + value);
     }
 
     /**

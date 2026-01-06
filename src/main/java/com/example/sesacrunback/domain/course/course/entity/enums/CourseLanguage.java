@@ -25,7 +25,15 @@ public enum CourseLanguage {
      */
     @JsonCreator
     public static CourseLanguage from(String value) {
-        return CourseLanguage.valueOf(value.toUpperCase());
+        if (value == null) {
+            return null;
+        }
+        for (CourseLanguage language : values()) {
+            if (language.name().equalsIgnoreCase(value)) {
+                return language;
+            }
+        }
+        throw new IllegalArgumentException("유효하지 않은 언어 값입니다: " + value);
     }
 
     /**
