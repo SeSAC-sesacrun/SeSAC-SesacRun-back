@@ -1,6 +1,8 @@
 package com.example.sesacrunback.domain.course.course.dto.request;
 
 import com.example.sesacrunback.domain.course.course.entity.Course;
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseLanguage;
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseLevel;
 import com.example.sesacrunback.domain.course.section.entity.Section;
 import com.example.sesacrunback.domain.course.lecture.entity.Lecture;
 import com.example.sesacrunback.domain.user.entity.User;
@@ -35,6 +37,12 @@ public class CreateCourseRequest {
     @NotBlank(message = "카테고리는 필수입니다")
     private String category;
 
+    @NotNull(message = "난이도는 필수입니다")
+    private CourseLevel level;
+
+    @NotNull(message = "언어는 필수입니다")
+    private CourseLanguage language;
+
     @NotNull(message = "가격은 필수입니다")
     @Min(value = 0, message = "가격은 0원 이상이어야 합니다")
     private Integer price;
@@ -54,6 +62,8 @@ public class CreateCourseRequest {
             detailedDescription,
             thumbnail,
             category,
+            level,
+            language,
             price,
             features
         );

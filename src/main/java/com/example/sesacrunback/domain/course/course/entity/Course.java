@@ -1,5 +1,7 @@
 package com.example.sesacrunback.domain.course.course.entity;
 
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseLanguage;
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseLevel;
 import com.example.sesacrunback.domain.course.course.entity.enums.CourseStatus;
 import com.example.sesacrunback.domain.course.section.entity.Section;
 import com.example.sesacrunback.domain.user.entity.User;
@@ -40,6 +42,14 @@ public class Course extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String category;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CourseLevel level;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CourseLanguage language;
 
     @Column(nullable = false)
     private Integer price;
@@ -98,6 +108,8 @@ public class Course extends BaseTimeEntity {
             String detailedDescription,
             String thumbnail,
             String category,
+            CourseLevel level,
+            CourseLanguage language,
             Integer price,
             List<String> features
     ) {
@@ -108,6 +120,8 @@ public class Course extends BaseTimeEntity {
         course.detailedDescription = detailedDescription;
         course.thumbnail = thumbnail;
         course.category = category;
+        course.level = level;
+        course.language = language;
         course.price = price;
         course.features = features;
         course.status = CourseStatus.PUBLISHED;
@@ -141,6 +155,8 @@ public class Course extends BaseTimeEntity {
             String detailedDescription,
             String thumbnail,
             String category,
+            CourseLevel level,
+            CourseLanguage language,
             Integer price,
             List<String> features
     ) {
@@ -149,6 +165,8 @@ public class Course extends BaseTimeEntity {
         this.detailedDescription = detailedDescription;
         this.thumbnail = thumbnail;
         this.category = category;
+        this.level = level;
+        this.language = language;
         this.price = price;
         this.features = features != null ? features : new ArrayList<>();
     }

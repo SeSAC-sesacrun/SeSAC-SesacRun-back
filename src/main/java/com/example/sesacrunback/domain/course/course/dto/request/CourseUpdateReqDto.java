@@ -1,5 +1,7 @@
 package com.example.sesacrunback.domain.course.course.dto.request;
 
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseLanguage;
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseLevel;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +28,12 @@ public class CourseUpdateReqDto {
 
     @NotBlank(message = "카테고리는 필수입니다")
     private final String category;
+
+    @NotNull(message = "난이도는 필수입니다")
+    private final CourseLevel level;
+
+    @NotNull(message = "언어는 필수입니다")
+    private final CourseLanguage language;
 
     @NotNull(message = "가격은 필수입니다")
     @Min(value = 0, message = "가격은 0원 이상이어야 합니다")

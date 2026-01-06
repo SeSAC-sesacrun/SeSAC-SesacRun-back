@@ -20,6 +20,8 @@ public class CourseDetailResponse {
     private final String detailedDescription;
     private final String thumbnail;
     private final String category;
+    private final String level;       // 난이도 (한글)
+    private final String language;    // 언어 (한글)
     private final Integer price;
     private final Integer studentCount;
     private final List<String> features;
@@ -41,6 +43,8 @@ public class CourseDetailResponse {
                 course.getDetailedDescription(),
                 course.getThumbnail(),
                 course.getCategory(),
+                course.getLevel().getKorean(),
+                course.getLanguage().getKorean(),
                 course.getPrice(),
                 course.getStudentCount(),
                 course.getFeatures(),
@@ -67,6 +71,8 @@ public class CourseDetailResponse {
                 course.getDetailedDescription(),
                 course.getThumbnail(),
                 course.getCategory(),
+                course.getLevel().getKorean(),
+                course.getLanguage().getKorean(),
                 course.getPrice(),
                 course.getStudentCount(),
                 course.getFeatures(),

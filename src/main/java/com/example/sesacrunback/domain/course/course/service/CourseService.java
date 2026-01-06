@@ -201,6 +201,8 @@ public class CourseService {
                 reqDto.getDetailedDescription(),
                 reqDto.getThumbnail(),
                 reqDto.getCategory(),
+                reqDto.getLevel(),
+                reqDto.getLanguage(),
                 reqDto.getPrice(),
                 reqDto.getFeatures()
         );
