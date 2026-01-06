@@ -12,6 +12,7 @@ import com.example.sesacrunback.domain.refund.entity.RefundStatus;
 import com.example.sesacrunback.domain.refund.repository.RefundRepository;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.domain.user.repository.UserRepository;
+import com.example.sesacrunback.domain.enrollment.service.EnrollmentService;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
 import com.siot.IamportRestClient.IamportClient;
@@ -31,6 +32,7 @@ public class RefundService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final RefundRepository refundRepository;
+    private final EnrollmentService enrollmentService;
     private final IamportClient iamportClient;
 
     public RefundResponse createRefund(RefundRequest request, Long userId) {
@@ -67,6 +69,7 @@ public class RefundService {
             if (payment.getAmount() == 0) {
                 order.cancel();
                 payment.cancel();
+                enrollmentService.cancelForOrder(order, user);
                 refund.complete();
                 return RefundResponse.builder()
                         .refundId(refund.getId())
@@ -87,6 +90,7 @@ public class RefundService {
             // 성공 시 DB 상태 변경
             order.cancel();
             payment.cancel();
+            enrollmentService.cancelForOrder(order, user);
             refund.complete();
 
             return RefundResponse.builder()

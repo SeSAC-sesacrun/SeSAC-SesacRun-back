@@ -6,6 +6,8 @@ import com.example.sesacrunback.domain.course.course.dto.response.CourseDetailRe
 import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseWatchResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.EnrolledCourseResponse;
+import com.example.sesacrunback.domain.course.course.dto.response.InstructorCourseRevenueDto;
+import com.example.sesacrunback.domain.course.course.dto.response.InstructorStatisticsResDto;
 import com.example.sesacrunback.domain.course.course.service.CourseService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import com.example.sesacrunback.global.security.CustomUserDetails;
@@ -88,12 +90,27 @@ public class CourseController {
 
     @GetMapping("/my")
     // @PreAuthorize("hasRole('INSTRUCTOR')") // 인증 시스템 협업 중이므로 주석 처리
-    public ResponseEntity<ApiResponse<Page<CourseResponse>>> getMyCourses(
+    public ResponseEntity<ApiResponse<Page<InstructorCourseRevenueDto>>> getMyCourses(
             @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long instructorId = userDetails.getId();
-        Page<CourseResponse> courses = courseService.getMyCourses(pageable, instructorId);
+        Page<InstructorCourseRevenueDto> courses = courseService.getMyCourses(pageable, instructorId);
         return ResponseEntity.ok(ApiResponse.success(courses));
+    }
+
+    /**
+     * 강사 통계 조회 (대시보드용)
+     * - 총 강의 수
+     * - 총 수강생 수
+     * - 총 수익
+     */
+    @GetMapping("/my/statistics")
+    // @PreAuthorize("hasRole('INSTRUCTOR')") // 인증 시스템 협업 중이므로 주석 처리
+    public ResponseEntity<ApiResponse<InstructorStatisticsResDto>> getMyStatistics(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long instructorId = userDetails.getId();
+        InstructorStatisticsResDto statistics = courseService.getMyStatistics(instructorId);
+        return ResponseEntity.ok(ApiResponse.success(statistics));
     }
 
     /**

@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/ws-stomp/**").permitAll()  // WebSocket 엔드포인트 허용
 
                         // 강의
+                        .requestMatchers(HttpMethod.GET, "/api/courses/my/statistics").hasRole("INSTRUCTOR") // 통계 조회: 강사
                         .requestMatchers(HttpMethod.GET, "/api/courses/my").hasRole("INSTRUCTOR") // 조회: 강사
                         .requestMatchers(HttpMethod.POST,"/api/courses").hasRole("INSTRUCTOR") // 작성: 강사
                         .requestMatchers(HttpMethod.DELETE,"/api/courses/**").hasRole("INSTRUCTOR") // 삭제: 강사

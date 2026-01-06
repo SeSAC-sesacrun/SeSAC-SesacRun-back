@@ -44,8 +44,25 @@ public class Course extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer price;
 
+    /**
+     * 수강생 수 캐시 값
+     * - ACTIVE Enrollment 수를 기준으로 계산된 결과
+     * - Enrollment COUNT 쿼리 비용을 줄이기 위한 캐시 필드
+     * - 최종 권위 데이터는 Enrollment (정확한 수치는 Enrollment 테이블 조회)
+     * - 조회/정렬/통계 목적으로 사용
+     * - Eventual Consistency: 트랜잭션 커밋 전까지 실제 Enrollment 수와 일시적 차이가 발생할 수 있음
+     */
     @Column(nullable = false)
     private Integer studentCount = 0;
+
+    /**
+     * Optimistic Lock을 위한 버전 필드
+     * - 동시성 제어: 동시에 여러 결제/환불이 발생해도 studentCount 일관성 유지
+     * - OptimisticLockException 발생 시 트랜잭션 롤백
+     * - JPA가 자동으로 관리 (초기값 0, 수정 시 자동 증가)
+     */
+    @Version
+    private Long version;
 
     @ElementCollection
     @CollectionTable(
@@ -166,8 +183,23 @@ public class Course extends BaseTimeEntity {
 
     /* ================= 비즈니스 로직 ================= */
 
-    public void incrementStudentCount() {
+    /**
+     * 수강생 수 증가
+     * - Enrollment가 ACTIVE로 새로 생성될 때만 호출
+     */
+    public void increaseStudentCount() {
         this.studentCount++;
+    }
+
+    /**
+     * 수강생 수 감소
+     * - Enrollment.status가 ACTIVE → CANCELED로 전이될 때만 호출
+     * - 0 미만으로 내려가지 않도록 방어
+     */
+    public void decreaseStudentCount() {
+        if (this.studentCount > 0) {
+            this.studentCount--;
+        }
     }
 
     /* ================= 편의 메서드 ================= */

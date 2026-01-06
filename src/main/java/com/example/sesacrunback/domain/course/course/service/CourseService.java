@@ -7,11 +7,14 @@ import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse
 import com.example.sesacrunback.domain.course.course.dto.response.CourseViewContext;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseWatchResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.EnrolledCourseResponse;
+import com.example.sesacrunback.domain.course.course.dto.response.InstructorCourseRevenueDto;
+import com.example.sesacrunback.domain.course.course.dto.response.InstructorStatisticsResDto;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.course.course.repository.CourseRepository;
 import com.example.sesacrunback.domain.enrollment.entity.EnrollmentStatus;
 import com.example.sesacrunback.domain.enrollment.repository.EnrollmentRepository;
 import com.example.sesacrunback.domain.course.lecture.entity.Lecture;
+import com.example.sesacrunback.domain.payment.repository.PaymentRepository;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.exception.CustomException;
 import com.example.sesacrunback.global.exception.ErrorCode;
@@ -37,6 +40,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final EntityManager entityManager;
     private final EnrollmentRepository enrollmentRepository;
+    private final PaymentRepository paymentRepository;
 
     /**
      * 강의 생성 (Phase 1: 생성 즉시 게시)
@@ -141,12 +145,33 @@ public class CourseService {
 
     /**
      * 강사의 강의 목록 조회 (페이징)
+     * - 강의별 수익 포함 (Payment.amount 기준)
      */
-    public Page<CourseResponse> getMyCourses(Pageable pageable, Long instructorId) {
+    public Page<InstructorCourseRevenueDto> getMyCourses(Pageable pageable, Long instructorId) {
         log.info("Getting courses for instructor ID: {}", instructorId);
 
-        return courseRepository.findByInstructor_Id(instructorId, pageable)
-                .map(CourseResponse::from);
+        return courseRepository.findInstructorCoursesWithRevenue(instructorId, pageable);
+    }
+
+    /**
+     * 강사 통계 조회 (대시보드용)
+     * - 총 강의 수
+     * - 총 수강생 수 (Course.studentCount 합산)
+     * - 총 수익 (COMPLETED 주문 기준)
+     */
+    public InstructorStatisticsResDto getMyStatistics(Long instructorId) {
+        log.info("Getting statistics for instructor ID: {}", instructorId);
+
+        // 1. 총 강의 수
+        int totalCourses = courseRepository.countByInstructor_Id(instructorId).intValue();
+
+        // 2. 총 수강생 수 (studentCount 합산) - JPQL SUM은 Long 반환
+        Long totalStudents = courseRepository.sumStudentCountByInstructor_Id(instructorId);
+
+        // 3. 총 수익 (Phase 1에서 만든 쿼리 사용)
+        Long totalRevenue = paymentRepository.calculateTotalRevenueByInstructor(instructorId);
+
+        return InstructorStatisticsResDto.of(totalCourses, totalStudents, totalRevenue);
     }
 
     /**
