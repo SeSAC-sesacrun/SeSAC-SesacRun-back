@@ -14,13 +14,13 @@ public class InstructorStatisticsResDto {
 
     private final Integer totalCourses;
 
-    private final Integer totalStudents;
+    private final Long totalStudents;
 
     private final Long totalRevenue;
 
     public static InstructorStatisticsResDto of(
             Integer totalCourses,
-            Integer totalStudents,
+            Long totalStudents,
             Long totalRevenue
     ) {
         return new InstructorStatisticsResDto(

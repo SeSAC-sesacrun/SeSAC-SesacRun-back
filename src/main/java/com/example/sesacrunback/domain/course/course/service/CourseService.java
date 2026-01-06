@@ -165,8 +165,8 @@ public class CourseService {
         // 1. 총 강의 수
         int totalCourses = courseRepository.countByInstructor_Id(instructorId).intValue();
 
-        // 2. 총 수강생 수 (studentCount 합산)
-        Integer totalStudents = courseRepository.sumStudentCountByInstructor_Id(instructorId);
+        // 2. 총 수강생 수 (studentCount 합산) - JPQL SUM은 Long 반환
+        Long totalStudents = courseRepository.sumStudentCountByInstructor_Id(instructorId);
 
         // 3. 총 수익 (Phase 1에서 만든 쿼리 사용)
         Long totalRevenue = paymentRepository.calculateTotalRevenueByInstructor(instructorId);
