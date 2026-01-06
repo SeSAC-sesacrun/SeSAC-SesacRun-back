@@ -3,6 +3,7 @@ package com.example.sesacrunback.domain.order.repository;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import com.example.sesacrunback.domain.order.entity.Order;
 import com.example.sesacrunback.domain.order.entity.OrderState;
+import com.example.sesacrunback.domain.payment.entity.Payment;
 import com.example.sesacrunback.domain.user.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import java.util.List;
@@ -12,12 +13,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    Optional<Order> findByOrderNumber(String orderNumber);
-
     /**
      * 유저가 해당 코스를 결제 완료(COMPLETED) 상태로 구매했는지 여부
      */
@@ -37,7 +35,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     }
 
     @EntityGraph(attributePaths = {"orderItems", "payment", "orderItems.course"})
-    List<Order> findAllByUserAndStatusOrderByCreatedAtDesc(User user, OrderState status);
+    List<Order> findAllByUserOrderByCreatedAtDesc(User user);
 
     // orderId와 User를 기준으로 주문 상세 정보를 조회
     @EntityGraph(attributePaths = {"orderItems", "orderItems.course", "payment", "user"})
