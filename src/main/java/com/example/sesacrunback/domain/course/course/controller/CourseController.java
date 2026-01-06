@@ -5,6 +5,7 @@ import com.example.sesacrunback.domain.course.course.dto.request.CreateCourseReq
 import com.example.sesacrunback.domain.course.course.dto.response.CourseDetailResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseResponse;
 import com.example.sesacrunback.domain.course.course.dto.response.CourseWatchResponse;
+import com.example.sesacrunback.domain.course.course.dto.response.EnrolledCourseResponse;
 import com.example.sesacrunback.domain.course.course.service.CourseService;
 import com.example.sesacrunback.global.common.dto.ApiResponse;
 import com.example.sesacrunback.global.security.CustomUserDetails;
@@ -97,14 +98,14 @@ public class CourseController {
 
     /**
      * 내가 수강 중인 강의 목록 조회
-     * (결제 완료 기준, 정렬 미지원)
+     * (결제 완료 기준, 최근 수강신청 순 정렬)
      */
     @GetMapping("/enrolled")
-    public ResponseEntity<ApiResponse<Page<CourseResponse>>> getEnrolledCourses(
+    public ResponseEntity<ApiResponse<Page<EnrolledCourseResponse>>> getEnrolledCourses(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PageableDefault(size = 12) Pageable pageable) {
+            @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Long userId = userDetails.getId();
-        Page<CourseResponse> courses = courseService.getEnrolledCourses(userId, pageable);
+        Page<EnrolledCourseResponse> courses = courseService.getEnrolledCourses(userId, pageable);
         return ResponseEntity.ok(ApiResponse.success(courses));
     }
 

@@ -103,3 +103,21 @@ INSERT INTO order_items (
              1,
              NOW()
          );
+
+-- Enrollments (수강 권한)
+-- 이학생(user_id=2)이 자바 완전 정복(course_id=1) 구매 완료 → 수강 권한 생성
+INSERT INTO enrollments (
+    user_id,
+    course_id,
+    order_id,
+    status,
+    created_at,
+    updated_at
+) VALUES (
+             2,  -- 이학생
+             1,  -- 자바 완전 정복
+             2,  -- Order 2 (COMPLETED)
+             'ACTIVE',
+             NOW(),
+             NOW()
+         );
