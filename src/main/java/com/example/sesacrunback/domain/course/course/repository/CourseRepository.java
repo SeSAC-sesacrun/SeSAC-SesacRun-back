@@ -1,5 +1,6 @@
 package com.example.sesacrunback.domain.course.course.repository;
 
+import com.example.sesacrunback.domain.course.course.dto.response.InstructorCourseRevenueDto;
 import com.example.sesacrunback.domain.course.course.entity.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -86,6 +87,53 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     """)
     Page<Course> searchCourses(
             @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
+    /* ===============================
+     * 통계 (강사 대시보드용)
+     * =============================== */
+
+    /**
+     * 강사별 강의 수
+     */
+    Long countByInstructor_Id(Long instructorId);
+
+    /**
+     * 강사별 총 수강생 수 (studentCount 합산)
+     * - Course.studentCount는 ACTIVE Enrollment 수를 캐싱한 값
+     * - 정확한 실시간 수치는 Enrollment COUNT 쿼리로 확인 가능
+     */
+    @Query("SELECT COALESCE(SUM(c.studentCount), 0) FROM Course c WHERE c.instructor.id = :instructorId")
+    Integer sumStudentCountByInstructor_Id(@Param("instructorId") Long instructorId);
+
+    /**
+     * 강사 대시보드 - 운영 중인 강의 목록 (수익 포함)
+     * - DTO Projection으로 한 번의 쿼리로 Course + Revenue 조회
+     * - Payment.amount 기준 수익 계산 (결제 금액의 단일 권위)
+     * - Payment.status = 'COMPLETED'만 집계
+     * - 무료 강의(price = 0)는 revenue = 0
+     */
+    @Query("""
+        SELECT new com.example.sesacrunback.domain.course.course.dto.response.InstructorCourseRevenueDto(
+            c.id,
+            c.title,
+            c.thumbnail,
+            c.price,
+            c.studentCount,
+            c.status,
+            COALESCE(SUM(p.amount), 0)
+        )
+        FROM Course c
+        LEFT JOIN OrderItem oi ON oi.course = c
+        LEFT JOIN Order o ON oi.order = o
+        LEFT JOIN Payment p ON p.order = o AND p.status = 'COMPLETED'
+        WHERE c.instructor.id = :instructorId
+        GROUP BY c.id, c.title, c.thumbnail, c.price, c.studentCount, c.status
+        ORDER BY c.createdAt DESC
+    """)
+    Page<InstructorCourseRevenueDto> findInstructorCoursesWithRevenue(
+            @Param("instructorId") Long instructorId,
             Pageable pageable
     );
 }

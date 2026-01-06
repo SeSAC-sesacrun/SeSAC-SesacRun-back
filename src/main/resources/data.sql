@@ -2,7 +2,9 @@
 INSERT INTO users (email, password, name, role, created_at, updated_at) VALUES
 ('instructor@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '김강사', 'INSTRUCTOR', NOW(), NOW()),
 ('user1@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '이학생', 'USER', NOW(), NOW()),
-('user2@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '박학생', 'USER', NOW(), NOW());
+('user2@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '박학생', 'USER', NOW(), NOW()),
+('user3@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '최학생', 'USER', NOW(), NOW()),
+('user4@test.com', '$2a$10$BWu6umBCNEsCR7705J1LH.oiJfFB9XQK3wUMvW5eGiX9b0gx/CcyG', '정학생', 'USER', NOW(), NOW());
 
 -- Courses
 INSERT INTO courses (title, description, detailed_description, thumbnail, category, price, student_count, status, instructor_id, created_at, updated_at) VALUES
@@ -121,3 +123,82 @@ INSERT INTO enrollments (
              NOW(),
              NOW()
          );
+
+-- ========================================
+-- 추가 테스트 데이터 (총 수강생 수 & 수익 검증용)
+-- ========================================
+
+-- [강의 1: 자바 완전 정복 - 무료 강의]
+-- 박학생(user_id=3)이 무료 강의 수강
+INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at)
+VALUES ('ORD-20231223-0001', 0, 'COMPLETED', 3, NOW(), NOW());
+
+INSERT INTO order_items (course_name, price, order_id, course_id, created_at)
+VALUES ('자바 완전 정복', 0, LAST_INSERT_ID(), 1, NOW());
+
+INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at)
+VALUES ('imp_free_001', 0, 'COMPLETED', LAST_INSERT_ID(), NOW(), NOW());
+
+INSERT INTO enrollments (user_id, course_id, order_id, status, created_at, updated_at)
+VALUES (3, 1, LAST_INSERT_ID(), 'ACTIVE', NOW(), NOW());
+
+-- [강의 2: 스프링 부트 입문 - 유료 강의]
+-- 박학생(user_id=3)이 유료 강의 구매 (1000원)
+INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at)
+VALUES ('ORD-20231223-0002', 1000, 'COMPLETED', 3, NOW(), NOW());
+
+INSERT INTO order_items (course_name, price, order_id, course_id, created_at)
+VALUES ('스프링 부트 입문', 1000, LAST_INSERT_ID(), 2, NOW());
+
+INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at)
+VALUES ('imp_paid_001', 1000, 'COMPLETED', LAST_INSERT_ID(), NOW(), NOW());
+
+INSERT INTO enrollments (user_id, course_id, order_id, status, created_at, updated_at)
+VALUES (3, 2, LAST_INSERT_ID(), 'ACTIVE', NOW(), NOW());
+
+-- 최학생(user_id=4)이 유료 강의 구매 (1000원)
+INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at)
+VALUES ('ORD-20231223-0003', 1000, 'COMPLETED', 4, NOW(), NOW());
+
+INSERT INTO order_items (course_name, price, order_id, course_id, created_at)
+VALUES ('스프링 부트 입문', 1000, LAST_INSERT_ID(), 2, NOW());
+
+INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at)
+VALUES ('imp_paid_002', 1000, 'COMPLETED', LAST_INSERT_ID(), NOW(), NOW());
+
+INSERT INTO enrollments (user_id, course_id, order_id, status, created_at, updated_at)
+VALUES (4, 2, LAST_INSERT_ID(), 'ACTIVE', NOW(), NOW());
+
+-- 정학생(user_id=5)이 유료 강의 구매 후 환불 (CANCELED)
+INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at)
+VALUES ('ORD-20231223-0004', 1000, 'COMPLETED', 5, NOW(), NOW());
+
+INSERT INTO order_items (course_name, price, order_id, course_id, created_at)
+VALUES ('스프링 부트 입문', 1000, LAST_INSERT_ID(), 2, NOW());
+
+-- 결제는 완료되었지만 환불됨 (REFUND)
+INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at)
+VALUES ('imp_refund_001', 1000, 'REFUND', LAST_INSERT_ID(), NOW(), NOW());
+
+-- Enrollment도 CANCELED
+INSERT INTO enrollments (user_id, course_id, order_id, status, created_at, updated_at)
+VALUES (5, 2, LAST_INSERT_ID(), 'CANCELED', NOW(), NOW());
+
+-- ========================================
+-- Course studentCount 업데이트
+-- ========================================
+-- 강의 1: ACTIVE Enrollment 2개 (user_id=2, 3)
+UPDATE courses SET student_count = 2 WHERE id = 1;
+
+-- 강의 2: ACTIVE Enrollment 2개 (user_id=3, 4), CANCELED 1개 (user_id=5는 카운트 안됨)
+UPDATE courses SET student_count = 2 WHERE id = 2;
+
+-- ========================================
+-- 검증 요약
+-- ========================================
+-- 강사(instructor_id=1) 통계:
+-- - 총 강의 수: 2개
+-- - 총 수강생 수: 4명 (강의1: 2명, 강의2: 2명)
+-- - 총 수익: 2000원 (강의1: 0원, 강의2: 2000원)
+--   * Payment.status='COMPLETED'만 집계
+--   * 환불된 건(REFUND)은 수익에서 제외됨
