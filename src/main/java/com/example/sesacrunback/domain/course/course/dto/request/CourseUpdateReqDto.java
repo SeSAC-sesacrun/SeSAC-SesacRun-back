@@ -1,35 +1,45 @@
 package com.example.sesacrunback.domain.course.course.dto.request;
 
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseLanguage;
+import com.example.sesacrunback.domain.course.course.entity.enums.CourseLevel;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class CourseUpdateReqDto {
 
     @NotBlank(message = "강의 제목은 필수입니다")
-    private final String title;
+    private String title;
 
     @NotBlank(message = "간단 소개는 필수입니다")
-    private final String description;
+    private String description;
 
     @NotBlank(message = "상세 설명은 필수입니다")
-    private final String detailedDescription;
+    private String detailedDescription;
 
     @NotBlank(message = "썸네일 URL은 필수입니다")
-    private final String thumbnail;
+    private String thumbnail;
 
     @NotBlank(message = "카테고리는 필수입니다")
-    private final String category;
+    private String category;
+
+    @NotNull(message = "난이도는 필수입니다")
+    private CourseLevel level;
+
+    @NotNull(message = "언어는 필수입니다")
+    private CourseLanguage language;
 
     @NotNull(message = "가격은 필수입니다")
     @Min(value = 0, message = "가격은 0원 이상이어야 합니다")
-    private final Integer price;
+    private Integer price;
 
-    private final List<String> features;
+    private List<String> features;
 }

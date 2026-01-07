@@ -191,21 +191,31 @@ public class CourseService {
     @Transactional
     public Long updateCourse(Long courseId, CourseUpdateReqDto reqDto, Long userId) {
         log.info("Updating course with ID: {}", courseId);
+        log.info("Request DTO - Title: {}, Level: {}, Language: {}, Category: {}, Price: {}, Features: {}",
+                reqDto.getTitle(), reqDto.getLevel(), reqDto.getLanguage(),
+                reqDto.getCategory(), reqDto.getPrice(), reqDto.getFeatures());
 
-        Course course = getCourseById(courseId);
-        validateCourseOwner(course, userId);
+        try {
+            Course course = getCourseById(courseId);
+            validateCourseOwner(course, userId);
 
-        course.updateCourse(
-                reqDto.getTitle(),
-                reqDto.getDescription(),
-                reqDto.getDetailedDescription(),
-                reqDto.getThumbnail(),
-                reqDto.getCategory(),
-                reqDto.getPrice(),
-                reqDto.getFeatures()
-        );
+            course.updateCourse(
+                    reqDto.getTitle(),
+                    reqDto.getDescription(),
+                    reqDto.getDetailedDescription(),
+                    reqDto.getThumbnail(),
+                    reqDto.getCategory(),
+                    reqDto.getLevel(),
+                    reqDto.getLanguage(),
+                    reqDto.getPrice(),
+                    reqDto.getFeatures()
+            );
 
-        return course.getId();
+            return course.getId();
+        } catch (Exception e) {
+            log.error("Error updating course: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
     /**
