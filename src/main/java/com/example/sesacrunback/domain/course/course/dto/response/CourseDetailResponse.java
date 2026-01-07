@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class CourseDetailResponse {
     private final Long id;
     private final Long instructorId;
+    private final String instructorName;
     private final String title;
     private final String description;
     private final String detailedDescription;
@@ -40,6 +41,7 @@ public class CourseDetailResponse {
         return new CourseDetailResponse(
                 course.getId(),
                 course.getInstructorId(),
+                course.getInstructor().getName(),
                 course.getTitle(),
                 course.getDescription(),
                 course.getDetailedDescription(),
@@ -68,6 +70,7 @@ public class CourseDetailResponse {
         return new CourseDetailResponse(
                 course.getId(),
                 course.getInstructorId(),
+                course.getInstructor().getName(),
                 course.getTitle(),
                 course.getDescription(),
                 course.getDetailedDescription(),
