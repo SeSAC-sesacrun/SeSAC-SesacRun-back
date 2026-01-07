@@ -21,13 +21,14 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     /**
      * 강의 상세 조회
-     * - sections 함께 조회
+     * - instructor, sections 함께 조회
      * - lectures는 SectionRepository에서 별도 조회
      * - MultipleBagFetchException 방지
      */
     @Query("""
         SELECT DISTINCT c
         FROM Course c
+        LEFT JOIN FETCH c.instructor
         LEFT JOIN FETCH c.sections s
         WHERE c.id = :id
     """)
