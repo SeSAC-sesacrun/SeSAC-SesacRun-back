@@ -6,7 +6,22 @@ import com.example.sesacrunback.domain.course.course.entity.enums.CourseStatus;
 import com.example.sesacrunback.domain.course.section.entity.Section;
 import com.example.sesacrunback.domain.user.entity.User;
 import com.example.sesacrunback.global.common.entity.BaseTimeEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,15 +79,6 @@ public class Course extends BaseTimeEntity {
      */
     @Column(nullable = false)
     private Integer studentCount = 0;
-
-    /**
-     * Optimistic Lock을 위한 버전 필드
-     * - 동시성 제어: 동시에 여러 결제/환불이 발생해도 studentCount 일관성 유지
-     * - OptimisticLockException 발생 시 트랜잭션 롤백
-     * - JPA가 자동으로 관리 (초기값 0, 수정 시 자동 증가)
-     */
-    @Version
-    private Long version;
 
     @ElementCollection
     @CollectionTable(
