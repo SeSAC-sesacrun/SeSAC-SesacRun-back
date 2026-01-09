@@ -403,6 +403,10 @@ VALUES ('자바 완전 정복', 0, 1, 1, NOW());
 INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at)
 VALUES ('imp_1234567890', 0, 'COMPLETED', 1, NOW(), NOW());
 
+-- Enrollments (수강 권한)
+INSERT INTO enrollments(user_id, course_id, order_id, status, created_at, updated_at)
+VALUES (2, 1, 1, 'ACTIVE', NOW(), NOW());
+
 -- Cart Items
 INSERT INTO cart_items (user_id, course_id, created_at)
 VALUES (3, 2, NOW());
