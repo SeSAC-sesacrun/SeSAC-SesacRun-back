@@ -311,41 +311,40 @@ WHERE s.course_id BETWEEN 1 AND 48;
 -- Recruitment Posts
 INSERT INTO recruitment_posts (category, status, title, content, current_members, total_members,
                                views, author_id, created_at, updated_at)
-VALUES
-    ('STUDY', 'RECRUITING',
-     '☕ 주말 자바 스터디원 모집합니다 (초중급)',
-     '매주 토요일 오전에 모여 자바 기초부터 컬렉션, 스트림, 간단한 실습까지 같이 공부하려고 합니다 😊
-      혼자 공부하기 막막하신 분, 꾸준히 공부하고 싶은 분 환영합니다!
-      장소는 온라인(디스코드)이며, 상황에 따라 오프라인도 고려 중입니다.',
-     1, 4, 0, 2, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+VALUES ('STUDY', 'RECRUITING',
+        '☕ 주말 자바 스터디원 모집합니다 (초중급)',
+        '매주 토요일 오전에 모여 자바 기초부터 컬렉션, 스트림, 간단한 실습까지 같이 공부하려고 합니다 😊
+         혼자 공부하기 막막하신 분, 꾸준히 공부하고 싶은 분 환영합니다!
+         장소는 온라인(디스코드)이며, 상황에 따라 오프라인도 고려 중입니다.',
+        1, 4, 0, 2, DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
 
-    ('PROJECT', 'RECRUITING',
-     '🛒 스프링 기반 쇼핑몰 프로젝트 팀원 구해요!',
-     '스프링 부트 + JPA 기반으로 쇼핑몰 프로젝트를 진행할 예정입니다.
-      기획부터 개발까지 함께 경험해보고 싶은 분이면 좋겠습니다 💻
-      주 1~2회 온라인 미팅 예정이며, 깃허브 협업 경험 있으신 분이면 더 좋아요!',
-     1, 4, 10, 3, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
+       ('PROJECT', 'RECRUITING',
+        '🛒 스프링 기반 쇼핑몰 프로젝트 팀원 구해요!',
+        '스프링 부트 + JPA 기반으로 쇼핑몰 프로젝트를 진행할 예정입니다.
+         기획부터 개발까지 함께 경험해보고 싶은 분이면 좋겠습니다 💻
+         주 1~2회 온라인 미팅 예정이며, 깃허브 협업 경험 있으신 분이면 더 좋아요!',
+        1, 4, 10, 3, DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
 
-    ('PROJECT', 'RECRUITING',
-     '🚀 스프링 부트 실전 프로젝트 같이 하실 분 모집',
-     '포트폴리오용으로 실전 프로젝트를 하나 만들어보려 합니다.
-      로그인, 주문, 결제, 관리자 기능까지 구현 예정이고
-      서로 코드 리뷰하면서 성장하는 걸 목표로 하고 있어요 🙌',
-     1, 4, 10, 3, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
+       ('PROJECT', 'RECRUITING',
+        '🚀 스프링 부트 실전 프로젝트 같이 하실 분 모집',
+        '포트폴리오용으로 실전 프로젝트를 하나 만들어보려 합니다.
+         로그인, 주문, 결제, 관리자 기능까지 구현 예정이고
+         서로 코드 리뷰하면서 성장하는 걸 목표로 하고 있어요 🙌',
+        1, 4, 10, 3, DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
 
-    ('PROJECT', 'RECRUITING',
-     '👨‍💻 백엔드 위주 스프링 프로젝트 팀원 모집',
-     '백엔드 중심으로 API 설계부터 DB 모델링까지 같이 해보실 분 구합니다.
-      스프링을 써본 경험이 있다면 수준은 크게 상관없어요.
-      성실하게 참여만 해주시면 됩니다 🙂',
-     1, 4, 10, 3, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
+       ('PROJECT', 'RECRUITING',
+        '👨‍💻 백엔드 위주 스프링 프로젝트 팀원 모집',
+        '백엔드 중심으로 API 설계부터 DB 모델링까지 같이 해보실 분 구합니다.
+         스프링을 써본 경험이 있다면 수준은 크게 상관없어요.
+         성실하게 참여만 해주시면 됩니다 🙂',
+        1, 4, 10, 3, DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY)),
 
-    ('PROJECT', 'RECRUITING',
-     '📦 실무 느낌으로 쇼핑몰 프로젝트 도전해보실 분!',
-     '실무에서 자주 쓰는 기능 위주로 쇼핑몰 프로젝트를 진행합니다.
-      이력서에 쓸 수 있는 결과물을 만드는 게 목표입니다 ✨
-      커뮤니케이션 잘 되는 분, 책임감 있게 참여하실 분 환영합니다!',
-     1, 4, 10, 3, NOW(), NOW());
+       ('PROJECT', 'RECRUITING',
+        '📦 실무 느낌으로 쇼핑몰 프로젝트 도전해보실 분!',
+        '실무에서 자주 쓰는 기능 위주로 쇼핑몰 프로젝트를 진행합니다.
+         이력서에 쓸 수 있는 결과물을 만드는 게 목표입니다 ✨
+         커뮤니케이션 잘 되는 분, 책임감 있게 참여하실 분 환영합니다!',
+        1, 4, 10, 3, NOW(), NOW());
 
 -- Recruitment Members
 INSERT INTO recruitment_members (role, status, post_id, user_id, created_at, updated_at)
@@ -353,52 +352,43 @@ VALUES ('ORGANIZER', 'APPROVED', 1, 2, NOW(), NOW()),
        ('PARTICIPANT', 'PENDING', 1, 4, NOW(), NOW());
 
 -- Chat
-INSERT INTO chat (post_id, name, created_at)
-VALUES (1, '☕ 주말 자바 스터디원 모집합니다 (초중급)', NOW());
-
-INSERT INTO chat (post_id, name, created_at)
-VALUES (2, '🛒 스프링 기반 쇼핑몰 프로젝트 팀원 구해요!', NOW());
-
-INSERT INTO chat (post_id, name, created_at)
-VALUES (3, '🚀 스프링 부트 실전 프로젝트 같이 하실 분 모집', NOW());
-
+INSERT INTO chat (post_id, name, last_message_content, created_at)
+VALUES (1, '☕ 주말 자바 스터디원 모집합니다 (초중급)', '좋아요 😊 그럼 이번 주 토요일 오전에 디스코드에서 진행할 예정인데 참여 가능하실까요?', NOW()),
+       (2, '🛒 스프링 기반 쇼핑몰 프로젝트 팀원 구해요!', '백엔드 쪽으로 참여하고 싶습니다!', NOW()),
+       (3, '🚀 스프링 부트 실전 프로젝트 같이 하실 분 모집', 'CRUD 프로젝트는 몇 번 해봤습니다!', NOW());
 
 -- Chat Participants
 INSERT INTO chat_participants (chat_id, user_id, role, created_at)
-VALUES
-    (1, 2, 'HOST', NOW()),     -- 모집글 작성자 (응답자)
-    (1, 4, 'MEMBER', NOW());   -- 참여자 (채팅 시작자)
+VALUES (1, 2, 'HOST', NOW()), -- 모집글 작성자 (응답자)
+       (1, 4, 'MEMBER', NOW()); -- 참여자 (채팅 시작자)
 
 
 INSERT INTO chat_participants (chat_id, user_id, role, created_at)
-VALUES
-    (2, 3, 'HOST', NOW()),
-    (2, 4, 'MEMBER', NOW());
+VALUES (2, 3, 'HOST', NOW()),
+       (2, 4, 'MEMBER', NOW());
 
 INSERT INTO chat_participants (chat_id, user_id, role, created_at)
-VALUES
-    (3, 3, 'HOST', NOW()),
-    (3, 5, 'MEMBER', NOW());
+VALUES (3, 3, 'HOST', NOW()),
+       (3, 5, 'MEMBER', NOW());
 
 -- Chat Messages
 INSERT INTO chat_messages (message, chat_id, sender_id, created_at)
-VALUES
-    ('안녕하세요! 자바 스터디 모집글 보고 연락드렸어요 😊 참여 가능할까요?', 1, 4, DATE_SUB(NOW(), INTERVAL 30 MINUTE)),
-    ('안녕하세요! 네, 참여 가능합니다 👍 현재 초중급 위주로 진행 중인데 괜찮으실까요?', 1, 2, DATE_SUB(NOW(), INTERVAL 25 MINUTE)),
-    ('네 괜찮습니다! 스프링 기초는 조금 다뤄봤어요.', 1, 4, DATE_SUB(NOW(), INTERVAL 20 MINUTE)),
-    ('좋아요 😊 그럼 이번 주 토요일 오전에 디스코드에서 진행할 예정인데 참여 가능하실까요?', 1, 2, DATE_SUB(NOW(), INTERVAL 15 MINUTE));
+VALUES ('안녕하세요! 자바 스터디 모집글 보고 연락드렸어요 😊 참여 가능할까요?', 1, 4, DATE_SUB(NOW(), INTERVAL 30 MINUTE)),
+       ('안녕하세요! 네, 참여 가능합니다 👍 현재 초중급 위주로 진행 중인데 괜찮으실까요?', 1, 2,
+        DATE_SUB(NOW(), INTERVAL 25 MINUTE)),
+       ('네 괜찮습니다! 스프링 기초는 조금 다뤄봤어요.', 1, 4, DATE_SUB(NOW(), INTERVAL 20 MINUTE)),
+       ('좋아요 😊 그럼 이번 주 토요일 오전에 디스코드에서 진행할 예정인데 참여 가능하실까요?', 1, 2,
+        DATE_SUB(NOW(), INTERVAL 15 MINUTE));
 
 INSERT INTO chat_messages (message, chat_id, sender_id, created_at)
-VALUES
-    ('안녕하세요! 쇼핑몰 프로젝트 모집글 보고 연락드렸습니다.', 2, 4, DATE_SUB(NOW(), INTERVAL 30 MINUTE)),
-    ('안녕하세요 🙂 어떤 파트에 관심 있으신가요?', 2, 3, DATE_SUB(NOW(), INTERVAL 25 MINUTE)),
-    ('백엔드 쪽으로 참여하고 싶습니다!', 2, 4, DATE_SUB(NOW(), INTERVAL 20 MINUTE));
+VALUES ('안녕하세요! 쇼핑몰 프로젝트 모집글 보고 연락드렸습니다.', 2, 4, DATE_SUB(NOW(), INTERVAL 30 MINUTE)),
+       ('안녕하세요 🙂 어떤 파트에 관심 있으신가요?', 2, 3, DATE_SUB(NOW(), INTERVAL 25 MINUTE)),
+       ('백엔드 쪽으로 참여하고 싶습니다!', 2, 4, DATE_SUB(NOW(), INTERVAL 20 MINUTE));
 
 INSERT INTO chat_messages (message, chat_id, sender_id, created_at)
-VALUES
-    ('안녕하세요! 포트폴리오용 프로젝트 참여 가능할까요?', 3, 5, DATE_SUB(NOW(), INTERVAL 25 MINUTE)),
-    ('네 가능합니다 😊 스프링 사용 경험은 어느 정도 되시나요?', 3, 3, DATE_SUB(NOW(), INTERVAL 20 MINUTE)),
-    ('CRUD 프로젝트는 몇 번 해봤습니다!', 3, 5, DATE_SUB(NOW(), INTERVAL 15 MINUTE));
+VALUES ('안녕하세요! 포트폴리오용 프로젝트 참여 가능할까요?', 3, 5, DATE_SUB(NOW(), INTERVAL 25 MINUTE)),
+       ('네 가능합니다 😊 스프링 사용 경험은 어느 정도 되시나요?', 3, 3, DATE_SUB(NOW(), INTERVAL 20 MINUTE)),
+       ('CRUD 프로젝트는 몇 번 해봤습니다!', 3, 5, DATE_SUB(NOW(), INTERVAL 15 MINUTE));
 
 
 -- Orders
