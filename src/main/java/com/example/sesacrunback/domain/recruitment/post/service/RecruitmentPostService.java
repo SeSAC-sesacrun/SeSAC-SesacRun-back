@@ -1,5 +1,7 @@
 package com.example.sesacrunback.domain.recruitment.post.service;
 
+import com.example.sesacrunback.domain.chat.chat.repository.ChatRepository;
+import com.example.sesacrunback.domain.chat.message.repository.ChatMessageRepository;
 import com.example.sesacrunback.domain.recruitment.member.service.RecruitmentMemberService;
 import com.example.sesacrunback.domain.recruitment.post.dto.request.RecruitmentPostCreateReqDto;
 import com.example.sesacrunback.domain.recruitment.post.dto.request.RecruitmentPostUpdateReqDto;
@@ -26,6 +28,8 @@ public class RecruitmentPostService {
     private final UserRepository userRepository;
     private final RecruitmentPostRepository recruitmentPostRepository;
     private final RecruitmentMemberService recruitmentMemberService;
+    private final ChatRepository chatRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Transactional
     public Long createPost(RecruitmentPostCreateReqDto reqDto, Long userId) {
@@ -76,6 +80,8 @@ public class RecruitmentPostService {
         RecruitmentPost post = getPostById(postId);
 
         validatePostOwner(post, userId);
+        chatMessageRepository.deleteByPostId(postId);
+        chatRepository.deleteByPostId(postId);
         recruitmentPostRepository.delete(post);
     }
 

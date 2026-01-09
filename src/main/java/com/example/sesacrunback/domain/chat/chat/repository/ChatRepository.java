@@ -20,4 +20,6 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
         """)
     Optional<Chat> findExistingChat(@Param("postId") Long postId, @Param("userId") Long userId,
         @Param("targetUserId") Long targetUserId);
+
+    void deleteByPostId(Long postId);
 }
