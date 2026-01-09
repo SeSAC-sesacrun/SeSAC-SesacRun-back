@@ -393,21 +393,21 @@ VALUES ('안녕하세요! 포트폴리오용 프로젝트 참여 가능할까요
 
 -- Orders
 INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at)
-VALUES ('ORD-20231222-0001', 50000, 'ORDER', 2, NOW(), NOW());
+VALUES ('ORD-20231222-0001', 0, 'COMPLETED', 2, NOW(), NOW());
 
 -- Order Items
 INSERT INTO order_items (course_name, price, order_id, course_id, created_at)
-VALUES ('자바 완전 정복', 50000, 1, 1, NOW());
+VALUES ('자바 완전 정복', 0, 1, 1, NOW());
 
 -- Payments
 INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at)
-VALUES ('imp_1234567890', 50000, 'COMPLETED', 1, NOW(), NOW());
+VALUES ('imp_1234567890', 0, 'COMPLETED', 1, NOW(), NOW());
 
 -- Cart Items
 INSERT INTO cart_items (user_id, course_id, created_at)
 VALUES (3, 2, NOW());
 
--- COMPLETED Order (이학생이 자바 완전 정복 구매 완료)
+-- COMPLETED Order (이학생이 리액트 기초 구매 완료)
 
 INSERT INTO orders (order_number,
                     total_amount,
@@ -416,26 +416,30 @@ INSERT INTO orders (order_number,
                     created_at,
                     updated_at)
 VALUES ('ORD-20231222-0002',
-        50000,
+        0,
         'COMPLETED',
         2,
         NOW(),
         NOW());
 
--- 해당 주문에 포함된 강의 (자바 완전 정복)
+-- 해당 주문에 포함된 강의 (리액트 기초)
 INSERT INTO order_items (course_name,
                          price,
                          order_id,
                          course_id,
                          created_at)
-VALUES ('자바 완전 정복',
-        50000,
-        LAST_INSERT_ID(),
-        1,
+VALUES ('리액트 기초',
+        0,
+        2,
+        3,
         NOW());
+        
+-- 해당 주문에 대한 결제 정보 (무료 강의)
+INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at)
+VALUES ('imp_free_002', 0, 'COMPLETED', 2, NOW(), NOW());
 
 -- Enrollments (수강 권한)
--- 이학생(user_id=2)이 자바 완전 정복(course_id=1) 구매 완료 → 수강 권한 생성
+-- 이학생(user_id=2)이 리액트 기초(course_id=3) 구매 완료 → 수강 권한 생성
 INSERT INTO enrollments (user_id,
                          course_id,
                          order_id,
@@ -443,7 +447,7 @@ INSERT INTO enrollments (user_id,
                          created_at,
                          updated_at)
 VALUES (2, -- 이학생
-        1, -- 자바 완전 정복
+        3, -- 리액트 기초
         2, -- Order 2 (COMPLETED)
         'ACTIVE',
         NOW(),
@@ -494,20 +498,20 @@ VALUES ('imp_paid_002', 1000, 'COMPLETED', LAST_INSERT_ID(), NOW(), NOW());
 INSERT INTO enrollments (user_id, course_id, order_id, status, created_at, updated_at)
 VALUES (4, 2, LAST_INSERT_ID(), 'ACTIVE', NOW(), NOW());
 
--- 정학생(user_id=5)이 유료 강의 구매 후 환불 (CANCELED)
+-- 정학생(user_id=5)이 유료 강의 구매 완료 (환불 전)
 INSERT INTO orders (order_number, total_amount, status, user_id, created_at, updated_at)
 VALUES ('ORD-20231223-0004', 1000, 'COMPLETED', 5, NOW(), NOW());
 
 INSERT INTO order_items (course_name, price, order_id, course_id, created_at)
 VALUES ('스프링 부트 입문', 1000, LAST_INSERT_ID(), 2, NOW());
 
--- 결제는 완료되었지만 환불됨 (REFUND)
+-- 결제 완료
 INSERT INTO payments (portone_payment_id, amount, status, order_id, created_at, updated_at)
-VALUES ('imp_refund_001', 1000, 'REFUND', LAST_INSERT_ID(), NOW(), NOW());
+VALUES ('imp_refund_001', 1000, 'COMPLETED', LAST_INSERT_ID(), NOW(), NOW());
 
--- Enrollment도 CANCELED
+-- Enrollment ACTIVE
 INSERT INTO enrollments (user_id, course_id, order_id, status, created_at, updated_at)
-VALUES (5, 2, LAST_INSERT_ID(), 'CANCELED', NOW(), NOW());
+VALUES (5, 2, LAST_INSERT_ID(), 'ACTIVE', NOW(), NOW());
 
 -- ========================================
 -- Course studentCount 업데이트
